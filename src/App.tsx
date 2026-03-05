@@ -121,9 +121,10 @@ function App() {
               powerPreference: 'high-performance',
               stencil: false,
               depth: true,
+              alpha: true,
             }}
           >
-            <color attach="background" args={['#050510']} />
+            <color attach="background" args={['transparent']} />
             <ambientLight intensity={0.4} />
             <pointLight position={[100, 100, 100]} intensity={1} />
             
