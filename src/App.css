@@ -18,10 +18,7 @@
 
 body {
   font-family: 'General Sans', sans-serif;
-  /* Background image behind everything */
-  background: 
-    linear-gradient(to bottom, rgba(5, 5, 16, 0.7) 0%, rgba(5, 5, 16, 0.85) 100%),
-    url('/assets/background.JPG') center center / cover no-repeat fixed;
+  background: radial-gradient(circle at center, #050a1f 0%, #050510 100%);
   color: #E2E8F0;
   cursor: crosshair;
   overflow: hidden;

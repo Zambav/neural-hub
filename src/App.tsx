@@ -65,6 +65,11 @@ function App() {
   return (
     <div className="app-container">
       <div className="scanline" />
+      <div className="background-effects">
+        <div className="grid-pattern" />
+        <div className="orbit-ring ring-1" />
+        <div className="orbit-ring ring-2" />
+      </div>
 
       <header className="top-bar">
         <div className="logo-section">
