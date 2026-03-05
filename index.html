@@ -460,6 +460,9 @@
  targetZoom: 0.7,
  hoveredId: null,
  selectedId: null,
+ isDragging: false,
+ lastMouseX: 0,
+ lastMouseY: 0,
  isInteracting: false,
  idleTimer: null,
  searchQuery: '',
@@ -497,8 +500,8 @@
  name: `PROJECT_${1024 + i}`,
  type: 'PROJECT',
  priority: 5,
- radius: 22, // Larger project nodes
- color: SETTINGS.colors.project,
+ radius: 28, // Much larger project nodes
+ color: '#9B59B6', // Purple for projects
  x3d: SETTINGS.radius * Math.sin(phi) * Math.cos(theta),
  y3d: SETTINGS.radius * Math.sin(phi) * Math.sin(theta),
  z3d: SETTINGS.radius * Math.cos(phi),
@@ -519,7 +522,7 @@
  name: `TASK_${2048 + i}`,
  type: 'TASK',
  priority: 3,
- radius: 8,
+ radius: 6, // Smaller than projects
  color: SETTINGS.colors.task,
  x3d: SETTINGS.radius * Math.sin(phi) * Math.cos(theta),
  y3d: SETTINGS.radius * Math.sin(phi) * Math.sin(theta),
@@ -541,7 +544,7 @@
  name: `MEMORY_${3072 + i}`,
  type: 'MEMORY',
  priority: 1,
- radius: 4,
+ radius: 2.5, // Much smaller memories
  color: SETTINGS.colors.memory,
  x3d: SETTINGS.radius * Math.sin(phi) * Math.cos(theta),
  y3d: SETTINGS.radius * Math.sin(phi) * Math.sin(theta),
@@ -696,13 +699,13 @@
  ctx.roundRect(labelX - 4, labelY - 14, textWidth + 8, 18, 4);
  ctx.fill();
  
- // Border
- ctx.strokeStyle = node.color;
+ // Border - purple for projects
+ ctx.strokeStyle = '#9B59B6';
  ctx.lineWidth = 1;
  ctx.stroke();
  
  // Text
- ctx.fillStyle = '#00D9FF';
+ ctx.fillStyle = '#9B59B6';
  ctx.fillText(labelText, labelX, labelY);
  
  ctx.globalAlpha = 1;
@@ -819,11 +822,24 @@
  }
 
  // Event Handlers
- window.addEventListener('mousemove', (e) => {
- state.isInteracting = true;
- clearTimeout(state.idleTimer);
- state.idleTimer = setTimeout(() => state.isInteracting = false, 3000);
+ canvas.addEventListener('mousedown', (e) => {
+ state.isDragging = true;
+ state.lastMouseX = e.clientX;
+ state.lastMouseY = e.clientY;
+ canvas.style.cursor = 'grabbing';
+ });
 
+ canvas.addEventListener('mouseup', () => {
+ state.isDragging = false;
+ canvas.style.cursor = 'crosshair';
+ });
+
+ canvas.addEventListener('mouseleave', () => {
+ state.isDragging = false;
+ canvas.style.cursor = 'crosshair';
+ });
+
+ window.addEventListener('mousemove', (e) => {
  const rect = canvas.getBoundingClientRect();
  const mx = e.clientX - rect.left;
  const my = e.clientY - rect.top;
@@ -832,11 +848,20 @@
  state.mouseX = mx;
  state.mouseY = my;
 
- // Rotation based on mouse position
- const offX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
- const offY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
- state.targetRotationY += offX * 0.015;
- state.targetRotationX = -offY * 0.5;
+ // Handle drag rotation
+ if (state.isDragging) {
+ const deltaX = e.clientX - state.lastMouseX;
+ const deltaY = e.clientY - state.lastMouseY;
+ state.targetRotationY += deltaX * 0.01;
+ state.targetRotationX += deltaY * 0.005;
+ state.targetRotationX = Math.max(-1.5, Math.min(1.5, state.targetRotationX)); // Limit vertical rotation
+ state.lastMouseX = e.clientX;
+ state.lastMouseY = e.clientY;
+ state.isInteracting = true;
+ clearTimeout(state.idleTimer);
+ state.idleTimer = setTimeout(() => state.isInteracting = false, 3000);
+ return;
+ }
 
  // Hover Detection - iterate in reverse (front to back)
  let hit = null;
@@ -861,9 +886,11 @@
  document.getElementById('tt-type').innerText = hit.type;
  document.getElementById('tt-priority').innerHTML = '★'.repeat(hit.priority);
  document.getElementById('tt-status').innerText = 'ACTIVE';
+ canvas.style.cursor = 'pointer';
  } else {
  state.hoveredId = null;
  tooltip.style.opacity = '0';
+ canvas.style.cursor = 'crosshair';
  }
  });
 
