@@ -105,7 +105,10 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
 
   // Pre-create geometry and material to avoid recreation
   const centerGeometry = useMemo(() => new THREE.IcosahedronGeometry(10, 1), []);
-  const sphereGeometry = useMemo(() => new THREE.SphereGeometry(1, 16, 16), []);
+  // Create sphere geometry with proper radius
+  const createSphereGeometry = useCallback((radius: number) => {
+    return new THREE.SphereGeometry(radius, 16, 16);
+  }, []);
 
   return (
     <group ref={groupRef}>
@@ -136,11 +139,11 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
               onPointerOver={(e: ThreeEvent<MouseEvent>) => handlePointerOver(e, node)}
               onPointerOut={handlePointerOut}
               scale={isHovered ? 1.3 : 1}
-              geometry={isCenter ? centerGeometry : sphereGeometry}
             >
-              {/* Scale the sphere geometry for non-center nodes */}
-              {!isCenter && (
-                <group scale={[finalRadius / 4, finalRadius / 4, finalRadius / 4]} />
+              {isCenter ? (
+                <primitive object={centerGeometry} attach="geometry" />
+              ) : (
+                <sphereGeometry args={[finalRadius / 4, 16, 16]} />
               )}
               <meshStandardMaterial
                 color={isHighlighted ? '#FFFFFF' : color}
