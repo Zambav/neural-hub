@@ -895,6 +895,64 @@ body {
   background: rgba(0, 217, 255, 0.1);
 }
 
+/* Tooltip Glass */
+.tooltip-glass {
+  background: rgba(10, 20, 35, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 217, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 217, 255, 0.2);
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+#node-tooltip {
+  position: fixed;
+  opacity: 0;
+  transform: scale(0.95);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 140px;
+}
+
+#node-tooltip.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#tt-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+#tt-type {
+  font-size: 0.5625rem;
+  padding: 0.125rem 0.375rem;
+  background: rgba(0, 217, 255, 0.2);
+  color: #00D9FF;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 217, 255, 0.3);
+}
+
+#tt-priority {
+  display: flex;
+  gap: 2px;
+  color: #F5A623;
+  font-size: 0.625rem;
+}
+
+#tt-status {
+  font-size: 0.5625rem;
+  color: #00FF88;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
 /* Node Labels in 3D */
 .node-label {
   background: rgba(0, 15, 25, 0.8);

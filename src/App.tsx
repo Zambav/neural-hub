@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -48,17 +48,40 @@ function NeuralNode({ position, color, isCenter, onClick }: {
 }
 
 function App() {
-  const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [selectedNode, setSelectedNode] = useState<any>(null); // For highlighting
+  const [detailNode, setDetailNode] = useState<any>(null); // For detail panel
   const [searchQuery, setSearchQuery] = useState('');
 
+  // ESC key to deselect
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedNode(null);
+        setDetailNode(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // When node is selected in graph, just highlight (don't open panel yet)
+  const handleSelectNode = (node: any) => {
+    setSelectedNode(node);
+    setDetailNode(null); // Clear detail panel when selecting new node
+  };
+
+  // When Info button is clicked, open detail panel
   const handleNodeClick = (node: any) => {
+    setDetailNode(node);
     setSelectedNode(node);
   };
 
+  // Handle click from interaction log (direct to detail)
   const handleEntryClick = (nodeId: string) => {
     const node = mockNodes.find((n: any) => n.id === nodeId);
     if (node) {
       setSelectedNode(node);
+      setDetailNode(node);
     }
   };
 
@@ -132,30 +155,17 @@ function App() {
             <ambientLight intensity={0.4} />
             <pointLight position={[100, 100, 100]} intensity={1} />
             
-            {/* Center Hub Node */}
-            <NeuralNode 
-              position={[0, 0, 0]} 
-              color="#00CFFF" 
-              isCenter 
-              onClick={() => setSelectedNode({ 
-                id: 'hub', 
-                title: 'OpenClaw Neural Hub',
-                type: 'project',
-                status: 'active',
-                priority: 5
-              })} 
-            />
-            
             {/* 3D Neural Graph with search */}
-            <NeuralGraph onNodeClick={handleNodeClick} searchQuery={searchQuery} />
+            <NeuralGraph onNodeClick={handleNodeClick} searchQuery={searchQuery} selectedNode={selectedNode} onSelectNode={handleSelectNode} />
 
             <OrbitControls 
               enableDamping 
               autoRotate={!searchQuery} 
-              autoRotateSpeed={0.3} 
+              autoRotateSpeed={0.15}
               enablePan={false}
               minDistance={200}
               maxDistance={1200}
+              dampingFactor={0.04}
             />
             <EffectComposer>
               <Bloom intensity={1.2} luminanceThreshold={0.2} luminanceSmoothing={0.9} />
@@ -200,17 +210,29 @@ function App() {
       </footer>
 
       {/* Node Detail Modal */}
-      {selectedNode && (
+      {detailNode && (
         <NodeDetailPanel 
           node={{
-            ...selectedNode,
-            timestamp: selectedNode.timestamp || new Date().toISOString(),
-            description: selectedNode.description || 'Memory fragment data retrieved from neural cache.',
-            tags: selectedNode.tags || ['neural', 'memory', 'cached']
+            ...detailNode,
+            timestamp: detailNode.timestamp || new Date().toISOString(),
+            description: detailNode.description || 'Memory fragment data retrieved from neural cache.',
+            tags: detailNode.tags || ['neural', 'memory', 'cached']
           }} 
-          onClose={() => setSelectedNode(null)} 
+          onClose={() => setDetailNode(null)} 
         />
       )}
+
+      {/* Tooltip Element */}
+      <div id="node-tooltip" className="tooltip-glass">
+        <div className="flex items-center justify-between gap-4">
+          <span id="tt-name" className="text-xs font-bold text-white">NODE_NAME</span>
+          <span id="tt-type" className="text-[9px] px-1.5 py-0.5 bg-cyan-500/20 text-cyan-400 rounded border border-cyan-500/30">TYPE</span>
+        </div>
+        <div className="flex items-center gap-2 mt-1">
+          <div id="tt-priority" className="flex gap-0.5 text-yellow-500"></div>
+          <span id="tt-status" className="text-[9px] text-green-400 uppercase font-bold tracking-tighter">ACTIVE</span>
+        </div>
+      </div>
     </div>
   );
 }

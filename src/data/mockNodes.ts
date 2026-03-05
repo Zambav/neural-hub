@@ -26,7 +26,15 @@ const generateNodes = (): HubNode[] => {
     "Node graph automation ideas", "Glow effects tutorial", "Force-directed graph study",
     "Camera animation techniques", "TypeScript best practices", "State management patterns",
     "Component architecture design", "Data visualization concepts", "Motion design principles",
-    "Particle system experiments", "Color theory for UI", "Responsive design patterns"
+    "Particle system experiments", "Color theory for UI", "Responsive design patterns",
+    "Kubernetes deployment notes", "Docker containerization", "GraphQL API design",
+    "WebSocket real-time updates", "OAuth authentication flow", "JWT token management",
+    "Redis caching strategies", "MongoDB optimization", "PostgreSQL queries",
+    "AWS lambda functions", "Serverless architecture", "CI/CD pipeline debugging",
+    "Microservices communication", "Message queue patterns", "Event-driven design",
+    "Testing automation suite", "Visual regression testing", "End-to-end testing",
+    "Accessibility audit results", "SEO optimization tips", "Web vitals analysis",
+    "Lazy loading strategies", "Code splitting techniques", "Bundle size optimization"
   ];
 
   const projectTitles = [
@@ -39,7 +47,14 @@ const generateNodes = (): HubNode[] => {
     "Client Project Alpha", "Freelance Contract Template", "Invoice Generator Tool",
     "Time Tracking App", "Project Management Dashboard", "Creative Brief Template",
     "Asset Organization System", "Version Control Workflow", "CI/CD Pipeline Setup",
-    "Testing Framework Research", "API Design Patterns", "Database Schema Design"
+    "Testing Framework Research", "API Design Patterns", "Database Schema Design",
+    "Real-time Chat Application", "E-commerce Platform", "Social Media Dashboard",
+    "Analytics Dashboard", "Customer CRM System", "Inventory Management",
+    "Booking System", "Video Streaming Service", "Music Player App",
+    "Weather Application", "Fitness Tracker", "Recipe Manager",
+    "Travel Planner", "Budget Calculator", "Expense Tracker",
+    "Password Manager", "Note Taking App", "Calendar Sync",
+    "File Storage System", "Image Editor", "Video Converter"
   ];
 
   const taskTitles = [
@@ -52,7 +67,12 @@ const generateNodes = (): HubNode[] => {
     "Fix responsive layout", "Add accessibility features", "Create API endpoint",
     "Write technical spec", "Design database schema", "Set up monitoring",
     "Optimize build process", "Add analytics tracking", "Create backup system",
-    "Document API", "Write user guide", "Prepare release notes"
+    "Document API", "Write user guide", "Prepare release notes",
+    "Configure webpack", "Set up ESLint", "Add Prettier config",
+    "Create Docker compose", "Write Makefile", "Setup GitHub Actions",
+    "Configure AWS S3", "Set up CloudFront", "Add error tracking",
+    "Implement search feature", "Add dark mode", "Create onboarding flow",
+    "Build admin panel", "Add export functionality", "Implement caching"
   ];
 
   const interactionTitles = [
@@ -62,20 +82,24 @@ const generateNodes = (): HubNode[] => {
     "Opened documentation", "Checked calendar", "Reviewed code changes",
     "Started new task", "Completed code review", "Sent client email",
     "Recorded demo video", "Published blog post", "Updated resume",
-    "Scheduled meeting", "Created new branch"
+    "Scheduled meeting", "Created new branch", "Merged pull request",
+    "Deployed application", "Ran test suite", "Built documentation",
+    "Submitted bug report", "Starred repository", "Forked project",
+    "Contributed to open source", "Attended meetup", "Completed course"
   ];
 
   const tagPool = [
     "urgent", "review", "bug", "feature", "design", "dev", "ui", "3d",
-    "automation", "research", "learning", "career", "portfolio", "project"
+    "automation", "research", "learning", "career", "portfolio", "project",
+    "performance", "security", "testing", "devops", "backend", "frontend"
   ];
 
   const statuses: Array<"active" | "pending" | "completed" | "archived"> = 
     ["active", "pending", "completed", "archived"];
   const now = new Date();
 
-  // Generate memory nodes (30)
-  for (let i = 0; i < 30; i++) {
+  // Generate memory nodes (60)
+  for (let i = 0; i < 60; i++) {
     const daysAgo = Math.floor(Math.random() * 90);
     const date = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
     const priority = Math.floor(Math.random() * 5) + 1;
@@ -91,8 +115,8 @@ const generateNodes = (): HubNode[] => {
     });
   }
 
-  // Generate project nodes (30)
-  for (let i = 0; i < 30; i++) {
+  // Generate project nodes (50)
+  for (let i = 0; i < 50; i++) {
     const daysAgo = Math.floor(Math.random() * 120);
     const date = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
     const priority = Math.floor(Math.random() * 5) + 1;
@@ -108,8 +132,8 @@ const generateNodes = (): HubNode[] => {
     });
   }
 
-  // Generate task nodes (30)
-  for (let i = 0; i < 30; i++) {
+  // Generate task nodes (40)
+  for (let i = 0; i < 40; i++) {
     const daysAgo = Math.floor(Math.random() * 60);
     const date = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
     const priority = Math.floor(Math.random() * 5) + 1;
