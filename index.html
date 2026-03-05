@@ -128,7 +128,7 @@
 
  <!-- Background Grids & Elements -->
  <div class="absolute inset-0 pointer-events-none overflow-hidden">
- <div id="bg-layer" class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('assets/background.jpg'); opacity: 0.3;"></div>
+ <div id="bg-layer" class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('/assets/background.JPG'); opacity: 0.4;"></div>
  <div class="absolute inset-0" style="background-image: radial-gradient(rgba(0, 217, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px;"></div>
  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-cyan-500/10 rounded-full"></div>
  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] border border-cyan-500/5 rounded-full animate-[spin_60s_linear_infinite]"></div>
@@ -938,11 +938,11 @@
  }
  });
 
- // Scroll wheel zoom (inverted - scroll up to zoom in)
+ // Scroll wheel zoom - scroll up to zoom in
  canvas.addEventListener('wheel', (e) => {
  e.preventDefault();
  const zoomSpeed = 0.001;
- state.targetZoom += e.deltaY * zoomSpeed; // Inverted
+ state.targetZoom -= e.deltaY * zoomSpeed;
  state.targetZoom = Math.max(0.2, Math.min(2, state.targetZoom)); // Limit zoom range
  }, { passive: false });
 
