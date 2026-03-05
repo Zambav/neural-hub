@@ -439,8 +439,9 @@
  
  // Performance-optimized settings
  const SETTINGS = {
- nodeCount: 80, // Reduced from 300
- radius: 500, // Increased from 380 for better spacing
+ nodeCount: 80,
+ radius: 700, // Zoomed out for better navigation
+ defaultZoom: 0.7, // Start zoomed out more
  colors: {
  project: '#00D9FF',
  task: '#5BC8C0',
@@ -455,13 +456,15 @@
  rotationY: 0,
  targetRotationX: 0,
  targetRotationY: 0,
- zoom: 1,
- targetZoom: 1,
+ zoom: 0.7,
+ targetZoom: 0.7,
  hoveredId: null,
  selectedId: null,
  isInteracting: false,
  idleTimer: null,
- searchQuery: ''
+ searchQuery: '',
+ mouseX: 0,
+ mouseY: 0
  };
 
  function resize() {
@@ -494,7 +497,7 @@
  name: `PROJECT_${1024 + i}`,
  type: 'PROJECT',
  priority: 5,
- radius: 14, // Increased from 9
+ radius: 22, // Larger project nodes
  color: SETTINGS.colors.project,
  x3d: SETTINGS.radius * Math.sin(phi) * Math.cos(theta),
  y3d: SETTINGS.radius * Math.sin(phi) * Math.sin(theta),
@@ -664,6 +667,49 @@
  ctx.globalAlpha = 1;
  }
 
+ // Draw proximity labels for project nodes when mouse is close
+ function drawProximityLabels() {
+ if (state.searchQuery) return; // Don't show if searching
+ 
+ nodes.forEach(node => {
+ if (node.type !== 'PROJECT') return;
+ 
+ const dx = state.mouseX - node.screenX;
+ const dy = state.mouseY - node.screenY;
+ const dist = Math.sqrt(dx * dx + dy * dy);
+ 
+ // Show label when mouse is within 80px of a project node
+ if (dist < 80 && node.screenZ > -SETTINGS.radius * 0.5) {
+ const opacity = Math.max(0.3, 1 - (dist / 80));
+ 
+ // Label background
+ ctx.globalAlpha = opacity * 0.9;
+ const labelText = node.name;
+ ctx.font = "11px 'JetBrains Mono', monospace";
+ const textWidth = ctx.measureText(labelText).width;
+ const labelX = node.screenX + node.screenRadius + 8;
+ const labelY = node.screenY - 8;
+ 
+ // Background
+ ctx.fillStyle = 'rgba(0, 15, 25, 0.95)';
+ ctx.beginPath();
+ ctx.roundRect(labelX - 4, labelY - 14, textWidth + 8, 18, 4);
+ ctx.fill();
+ 
+ // Border
+ ctx.strokeStyle = node.color;
+ ctx.lineWidth = 1;
+ ctx.stroke();
+ 
+ // Text
+ ctx.fillStyle = '#00D9FF';
+ ctx.fillText(labelText, labelX, labelY);
+ 
+ ctx.globalAlpha = 1;
+ }
+ });
+ }
+
  function drawLink(link) {
  const { source, target } = link;
  if (!source.visible || !target.visible) return;
@@ -766,6 +812,9 @@
  // Draw nodes
  sortedNodes.forEach(drawNode);
 
+ // Draw proximity labels for project nodes
+ drawProximityLabels();
+
  requestAnimationFrame(animate);
  }
 
@@ -778,6 +827,10 @@
  const rect = canvas.getBoundingClientRect();
  const mx = e.clientX - rect.left;
  const my = e.clientY - rect.top;
+ 
+ // Track mouse position for proximity labels
+ state.mouseX = mx;
+ state.mouseY = my;
 
  // Rotation based on mouse position
  const offX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
@@ -819,7 +872,7 @@
  const node = nodes.find(n => n.id === state.hoveredId);
  if (node) {
  state.selectedId = node.id;
- state.targetZoom = 2.5;
+ state.targetZoom = 1.5; // Less zoom for better navigation
  state.targetRotationY = -Math.atan2(node.x3d, node.z3d);
  state.targetRotationX = Math.asin(node.y3d / SETTINGS.radius);
  
@@ -832,7 +885,7 @@
  }
  } else {
  state.selectedId = null;
- state.targetZoom = 1;
+ state.targetZoom = 0.7;
  modal.classList.remove('side-panel-open');
  document.getElementById('selected-node-header').classList.add('hidden');
  }
@@ -840,7 +893,7 @@
 
  closeModal.onclick = () => {
  state.selectedId = null;
- state.targetZoom = 1;
+ state.targetZoom = 0.7;
  modal.classList.remove('side-panel-open');
  document.getElementById('selected-node-header').classList.add('hidden');
  };
@@ -850,7 +903,7 @@
  if (e.target === container || e.target === canvas) {
  if (state.selectedId !== null) {
  state.selectedId = null;
- state.targetZoom = 1;
+ state.targetZoom = 0.7;
  modal.classList.remove('side-panel-open');
  document.getElementById('selected-node-header').classList.add('hidden');
  }
