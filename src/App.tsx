@@ -124,7 +124,6 @@ function App() {
               alpha: true,
             }}
           >
-            <color attach="background" args={['transparent']} />
             <ambientLight intensity={0.4} />
             <pointLight position={[100, 100, 100]} intensity={1} />
             
