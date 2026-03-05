@@ -18,7 +18,10 @@
 
 body {
   font-family: 'General Sans', sans-serif;
-  background: radial-gradient(circle at center, #001A2C 0%, #050510 100%);
+  /* Background image behind everything */
+  background: 
+    linear-gradient(to bottom, rgba(5, 5, 16, 0.7) 0%, rgba(5, 5, 16, 0.85) 100%),
+    url('/assets/background.JPG') center center / cover no-repeat fixed;
   color: #E2E8F0;
   cursor: crosshair;
   overflow: hidden;
@@ -94,10 +97,10 @@ body {
 
 /* Glass Panel Base */
 .glass-panel {
-  background: var(--glass-bg);
+  background: rgba(0, 15, 25, 0.4);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(0, 217, 255, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(0, 217, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 217, 255, 0.03);
   border-radius: 12px;
   position: relative;
 }
