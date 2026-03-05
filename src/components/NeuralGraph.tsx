@@ -56,15 +56,17 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
     }
 
     const count = filteredNodes.length;
-    const radius = 280; // Larger radius for more spread out sphere
+    const radius = 350; // Larger radius for more spread out sphere
 
     filteredNodes.forEach((node: any, i: number) => {
       // Proper Fibonacci sphere distribution
       const phi = Math.acos(1 - 2 * (i + 0.5) / count);
       const theta = Math.PI * (1 + Math.sqrt(5)) * i;
       
-      // Larger radius for higher priority nodes
-      const nodeRadius = radius + (node.priority > 3 ? 30 : node.priority > 1 ? 15 : 0);
+      // Varying radius to create 3D depth within sphere
+      // Inner nodes, middle nodes, and outer nodes
+      const depthVariation = node.priority > 3 ? 0.7 : (node.priority > 1 ? 0.85 : 1);
+      const nodeRadius = radius * depthVariation * (0.8 + Math.random() * 0.4);
       
       const x = nodeRadius * Math.sin(phi) * Math.cos(theta);
       const y = nodeRadius * Math.sin(phi) * Math.sin(theta);

@@ -115,7 +115,7 @@ function App() {
 
         <section className="center-canvas">
           <Canvas 
-            camera={{ position: [0, 0, 500], fov: 60 }}
+            camera={{ position: [0, 0, 700], fov: 60 }}
             // Performance: Limit DPR to 2 for high-DPI screens
             dpr={[1, 2]}
             // Performance: Use demand frame loop when not animating
@@ -154,8 +154,8 @@ function App() {
               autoRotate={!searchQuery} 
               autoRotateSpeed={0.3} 
               enablePan={false}
-              minDistance={150}
-              maxDistance={600}
+              minDistance={200}
+              maxDistance={1200}
             />
             <EffectComposer>
               <Bloom intensity={1.2} luminanceThreshold={0.2} luminanceSmoothing={0.9} />
