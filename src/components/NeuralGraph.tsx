@@ -19,6 +19,7 @@ const nodeColors: Record<string, string> = {
 function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const groupRef = useRef<THREE.Group>(null);
+  const linesRef = useRef<THREE.Group>(null);
   
   // Use useCallback for stable reference
   const handleNodeClick = useCallback((node: any) => {
@@ -39,12 +40,13 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
 
   // Pre-compute filtered nodes to avoid recalculation in map
   const filteredNodes = useMemo(() => {
-    return searchQuery 
+    const nodes = searchQuery 
       ? mockNodes.filter((n: any) => !n.isCenter && n.title?.toUpperCase().includes(searchQuery.toUpperCase()))
       : mockNodes.filter((n: any) => !n.isCenter);
+    return nodes.slice(0, 80); // Limit to 80 nodes
   }, [searchQuery]);
 
-  // Generate node positions using Fibonacci sphere distribution
+  // Generate node positions using proper Fibonacci sphere distribution
   const nodePositions = useMemo(() => {
     const pos = new Map<string, THREE.Vector3>();
     const centerNode = mockNodes.find((n: any) => n.isCenter);
@@ -53,14 +55,20 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
       pos.set(centerNode.id, new THREE.Vector3(0, 0, 0));
     }
 
+    const count = filteredNodes.length;
+    const radius = 200; // Main radius for the sphere
+
     filteredNodes.forEach((node: any, i: number) => {
-      const phi = Math.acos(-1 + (2 * i) / filteredNodes.length);
-      const theta = Math.sqrt(filteredNodes.length * Math.PI) * phi;
-      const radius = 150 + (5 - node.priority) * 30;
+      // Proper Fibonacci sphere distribution
+      const phi = Math.acos(1 - 2 * (i + 0.5) / count);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
       
-      const x = radius * Math.sin(phi) * Math.cos(theta);
-      const y = radius * Math.sin(phi) * Math.sin(theta);
-      const z = radius * Math.cos(phi);
+      // Larger radius for higher priority nodes
+      const nodeRadius = radius + (node.priority > 3 ? 30 : node.priority > 1 ? 15 : 0);
+      
+      const x = nodeRadius * Math.sin(phi) * Math.cos(theta);
+      const y = nodeRadius * Math.sin(phi) * Math.sin(theta);
+      const z = nodeRadius * Math.cos(phi);
       
       pos.set(node.id, new THREE.Vector3(x, y, z));
     });
@@ -68,7 +76,65 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
     return pos;
   }, [filteredNodes]);
 
-  // Animate nodes with breathing effect (optimized - avoid per-frame allocation)
+  // Generate connection lines between nodes
+  const connections = useMemo(() => {
+    const links: { start: THREE.Vector3; end: THREE.Vector3 }[] = [];
+    const pos = nodePositions;
+    
+    // Create connections between nearby nodes and high-priority nodes
+    filteredNodes.forEach((nodeA: any) => {
+      const posA = pos.get(nodeA.id);
+      if (!posA) return;
+      
+      // Connect high-priority nodes to 3-4 nearby nodes
+      if (nodeA.priority > 3) {
+        const connectionsToMake = 3 + Math.floor(Math.random() * 3);
+        let made = 0;
+        
+        // Find nearby nodes
+        const distances = filteredNodes
+          .filter((n: any) => n.id !== nodeA.id)
+          .map((n: any) => {
+            const posB = pos.get(n.id);
+            if (!posB) return { id: n.id, dist: Infinity };
+            return { id: n.id, dist: posA.distanceTo(posB) };
+          })
+          .sort((a, b) => a.dist - b.dist);
+        
+        for (const d of distances) {
+          if (made >= connectionsToMake) break;
+          const posB = pos.get(d.id);
+          if (posB) {
+            links.push({ start: posA.clone(), end: posB.clone() });
+            made++;
+          }
+        }
+      }
+    });
+    
+    return links;
+  }, [filteredNodes, nodePositions]);
+
+  // Create line geometry for connections
+  const lineGeometry = useMemo(() => {
+    if (connections.length === 0) return null;
+    
+    const positions = new Float32Array(connections.length * 6);
+    connections.forEach((conn, i) => {
+      positions[i * 6] = conn.start.x;
+      positions[i * 6 + 1] = conn.start.y;
+      positions[i * 6 + 2] = conn.start.z;
+      positions[i * 6 + 3] = conn.end.x;
+      positions[i * 6 + 4] = conn.end.y;
+      positions[i * 6 + 5] = conn.end.z;
+    });
+    
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geometry;
+  }, [connections]);
+
+  // Animate nodes with breathing effect
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
     
@@ -81,7 +147,7 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
       if (!node || node.isCenter) continue;
       
       // Breathing animation
-      const breathe = Math.sin(time * node.priority * 0.5 + i * 0.5) * 0.1;
+      const breathe = Math.sin(time * node.priority * 0.5 + i * 0.5) * 0.08;
       const scale = 1 + breathe;
       child.scale.setScalar(scale);
     }
@@ -103,86 +169,90 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
     return highlightedIds.has(nodeId);
   }, [highlightedIds]);
 
-  // Pre-create geometry and material to avoid recreation
-  const centerGeometry = useMemo(() => new THREE.IcosahedronGeometry(10, 1), []);
-  // Create sphere geometry with proper radius
-  const createSphereGeometry = useCallback((radius: number) => {
-    return new THREE.SphereGeometry(radius, 16, 16);
-  }, []);
-
   return (
-    <group ref={groupRef}>
-      {filteredNodes.slice(0, 80).map((node: any) => {
-        const pos = nodePositions.get(node.id);
-        if (!pos) return null;
-        
-        const isCenter = node.isCenter;
-        const isHighlighted = isNodeHighlighted(node.id);
-        const isHovered = hoveredNode === node.id;
-        
-        const color = isCenter ? '#00CFFF' : nodeColors[node.type] || '#00D9FF';
-        const radius = isCenter ? 10 : (node.priority > 3 ? 3 : 2);
-        
-        // Highlighted nodes are bigger
-        const finalRadius = isHighlighted ? radius * 1.5 : radius;
-        
-        return (
-          <group 
-            key={node.id} 
-            position={[pos.x, pos.y, pos.z]}
-          >
-            <mesh
-              onClick={(e: ThreeEvent<MouseEvent>) => {
-                e.stopPropagation();
-                handleNodeClick(node);
-              }}
-              onPointerOver={(e: ThreeEvent<MouseEvent>) => handlePointerOver(e, node)}
-              onPointerOut={handlePointerOut}
-              scale={isHovered ? 1.3 : 1}
+    <group>
+      {/* Connection Lines */}
+      {lineGeometry && (
+        <lineSegments ref={linesRef} geometry={lineGeometry}>
+          <lineBasicMaterial color="#00D9FF" transparent opacity={0.15} />
+        </lineSegments>
+      )}
+      
+      {/* Nodes */}
+      <group ref={groupRef}>
+        {filteredNodes.map((node: any) => {
+          const pos = nodePositions.get(node.id);
+          if (!pos) return null;
+          
+          const isCenter = node.isCenter;
+          const isHighlighted = isNodeHighlighted(node.id);
+          const isHovered = hoveredNode === node.id;
+          
+          const color = isCenter ? '#00CFFF' : nodeColors[node.type] || '#00D9FF';
+          
+          // Larger node sizes - priority based
+          let radius = 2;
+          if (node.priority >= 5) radius = 9;      // Projects - biggest
+          else if (node.priority >= 3) radius = 5; // Tasks - medium
+          else radius = 2.5;                        // Memory - smallest
+          
+          // Highlighted nodes are bigger
+          const finalRadius = isHighlighted ? radius * 1.8 : radius;
+          
+          return (
+            <group 
+              key={node.id} 
+              position={[pos.x, pos.y, pos.z]}
             >
-              {isCenter ? (
-                <primitive object={centerGeometry} attach="geometry" />
-              ) : (
-                <sphereGeometry args={[finalRadius / 4, 16, 16]} />
-              )}
-              <meshStandardMaterial
-                color={isHighlighted ? '#FFFFFF' : color}
-                emissive={isHighlighted ? '#FFFFFF' : color}
-                emissiveIntensity={isCenter ? 3 : isHighlighted ? 2 : 1}
-                transparent
-                opacity={isHighlighted ? 1 : 0.9}
-              />
-            </mesh>
-            
-            {/* Node label on hover or search highlight */}
-            {(isHovered || isHighlighted) && !isCenter && (
-              <Html
-                position={[0, finalRadius + 3, 0]}
-                center
-                distanceFactor={150}
-                style={{
-                  pointerEvents: 'none',
-                  transition: 'opacity 0.2s',
+              <mesh
+                onClick={(e: ThreeEvent<MouseEvent>) => {
+                  e.stopPropagation();
+                  handleNodeClick(node);
                 }}
+                onPointerOver={(e: ThreeEvent<MouseEvent>) => handlePointerOver(e, node)}
+                onPointerOut={handlePointerOut}
+                scale={isHovered ? 1.3 : 1}
               >
-                <div style={{
-                  background: 'rgba(0,15,25,0.95)',
-                  color: isHighlighted ? '#00D9FF' : '#fff',
-                  fontSize: '9px',
-                  padding: '3px 6px',
-                  borderRadius: '4px',
-                  fontFamily: "'JetBrains Mono', monospace",
-                  whiteSpace: 'nowrap',
-                  border: `1px solid ${isHighlighted ? '#00D9FF' : 'rgba(0,217,255,0.3)'}`,
-                  boxShadow: isHighlighted ? '0 0 10px rgba(0,217,255,0.5)' : 'none',
-                }}>
-                  {node.title?.substring(0, 20).toUpperCase()}
-                </div>
-              </Html>
-            )}
-          </group>
-        );
-      })}
+                <sphereGeometry args={[finalRadius, 16, 16]} />
+                <meshStandardMaterial
+                  color={isHighlighted ? '#FFFFFF' : color}
+                  emissive={isHighlighted ? '#FFFFFF' : color}
+                  emissiveIntensity={isCenter ? 3 : isHighlighted ? 2 : 1}
+                  transparent
+                  opacity={isHighlighted ? 1 : 0.9}
+                />
+              </mesh>
+              
+              {/* Node label on hover or search highlight */}
+              {(isHovered || isHighlighted) && !isCenter && (
+                <Html
+                  position={[0, finalRadius + 4, 0]}
+                  center
+                  distanceFactor={150}
+                  style={{
+                    pointerEvents: 'none',
+                    transition: 'opacity 0.2s',
+                  }}
+                >
+                  <div style={{
+                    background: 'rgba(0,15,25,0.95)',
+                    color: isHighlighted ? '#00D9FF' : '#fff',
+                    fontSize: '9px',
+                    padding: '3px 6px',
+                    borderRadius: '4px',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    whiteSpace: 'nowrap',
+                    border: `1px solid ${isHighlighted ? '#00D9FF' : 'rgba(0,217,255,0.3)'}`,
+                    boxShadow: isHighlighted ? '0 0 10px rgba(0,217,255,0.5)' : 'none',
+                  }}>
+                    {node.title?.substring(0, 20).toUpperCase()}
+                  </div>
+                </Html>
+              )}
+            </group>
+          );
+        })}
+      </group>
     </group>
   );
 }
