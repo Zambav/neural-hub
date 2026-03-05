@@ -4,25 +4,36 @@ import { Html, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import { mockNodes } from '../data/mockNodes';
 
+interface HubLink {
+  source: string;
+  target: string;
+  relationType: string;
+  strength: number;
+}
+
 interface NeuralGraphProps {
   onNodeClick: (node: any) => void;
   searchQuery: string;
   selectedNode: any;
   onSelectNode: (node: any | null) => void;
+  nodes?: any[];
+  links?: HubLink[];
 }
 
-// Dynamic color palettes for variety
+// Cyan/Teal color palette - projects brightest, memory darker
 const nodeColors: Record<string, string> = {
-  memory: '#4A90D9',
-  project: '#00D9FF',
-  task: '#5BC8C0',
-  interaction: '#9B59B6',
+  core: '#FFFFFF',
+  identity: '#00FFFF',
+  project: '#00FFFF', // Brightest cyan for projects
+  folder: '#00CED1',  // Slightly darker
+  file: '#008B8B',    // Dark teal
+  memory: '#2E8B57',  // Dark cyan-green (seagreen)
 };
 
-// Extended palette for color variation
+// Teal variations for visual depth
 const colorVariations = [
-  '#00D9FF', '#4A90D9', '#5BC8C0', '#9B59B6', '#F5A623', '#E74C3C',
-  '#2ECC71', '#E91E63', '#9C27B0', '#00BCD4', '#FF9800', '#8BC34A'
+  '#00FFFF', '#00CED1', '#20B2AA', '#008B8B', '#40E0D0', '#2E8B57',  // Darker greens for variety
+  '#3CB371', '#66CDAA', '#5F9EA0', '#48D1CC', '#00FA9A', '#8DEEEE'
 ];
 
 // Simple line component using drei Line
@@ -55,10 +66,15 @@ function DynamicLine({ sourceId, targetId, nodePositions, selectedNode }: {
   );
 }
 
-function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode }: NeuralGraphProps) {
+function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nodes: propNodes, links: propLinks }: NeuralGraphProps) {
+  // Use prop nodes or fallback to mockNodes
+  const allNodes = propNodes || mockNodes;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _allLinks = propLinks || []; // Reserved for future real link rendering
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const groupRef = useRef<THREE.Group>(null);
-  const linesRef = useRef<THREE.Group>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _linesRef = useRef<THREE.Group>(null); // Reserved for line group ref
   
   // Store node offset positions for floating animation
   const nodeOffsets = useRef<Map<string, { offset: THREE.Vector3; phase: number }>>(new Map());
@@ -129,10 +145,10 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode }: N
   // Pre-compute filtered nodes to avoid recalculation in map
   const filteredNodes = useMemo(() => {
     const nodes = searchQuery 
-      ? mockNodes.filter((n: any) => !n.isCenter && n.title?.toUpperCase().includes(searchQuery.toUpperCase()))
-      : mockNodes.filter((n: any) => !n.isCenter);
+      ? allNodes.filter((n: any) => !n.isCenter && n.title?.toUpperCase().includes(searchQuery.toUpperCase()))
+      : allNodes.filter((n: any) => !n.isCenter);
     return nodes.slice(0, 100); // Limit to 100 nodes for performance
-  }, [searchQuery]);
+  }, [searchQuery, allNodes]);
 
   // Assign colors to nodes for variety
   const nodeColorMap = useMemo(() => {
@@ -155,76 +171,103 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode }: N
   // Generate node positions using proper Fibonacci sphere distribution
   const nodePositions = useMemo(() => {
     const pos = new Map<string, THREE.Vector3>();
-    const centerNode = mockNodes.find((n: any) => n.isCenter);
+    // Find core by type === 'core' or isCenter flag
+    const centerNode = allNodes.find((n: any) => n.type === 'core' || n.isCenter);
     
+    // Place core at absolute center (0,0,0)
     if (centerNode) {
       pos.set(centerNode.id, new THREE.Vector3(0, 0, 0));
     }
 
-    const count = filteredNodes.length;
-    const radius = 380; // Larger radius for more spread out sphere
-
-    filteredNodes.forEach((node: any, i: number) => {
-      // Proper Fibonacci sphere distribution
-      const phi = Math.acos(1 - 2 * (i + 0.5) / count);
-      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+    // All non-core nodes distributed evenly on Fibonacci sphere
+    const nonCoreNodes = filteredNodes.filter((n: any) => n.type !== 'core' && !n.isCenter);
+    const sphereRadius = 350;
+    
+    nonCoreNodes.forEach((node: any, i: number) => {
+      // Fibonacci sphere distribution with MORE randomness
+      const phi = Math.acos(1 - 2 * (i + 0.5) / nonCoreNodes.length);
+      const theta = Math.PI * (1 + Math.sqrt(5)) * i + (Math.random() - 0.5) * 0.8; // Add angle jitter
       
-      // Varying radius to create 3D depth within sphere
-      const depthVariation = node.priority > 3 ? 0.7 : (node.priority > 1 ? 0.85 : 1);
-      const nodeRadius = radius * depthVariation * (0.8 + Math.random() * 0.4);
+      // Add MORE variation for depth - projects closer, others spread out
+      let depthFactor = 1;
+      if (node.type === 'project') depthFactor = 0.6 + Math.random() * 0.2; // Projects closer to core
+      else if (node.type === 'identity') depthFactor = 0.7 + Math.random() * 0.2;
+      else if (node.type === 'folder') depthFactor = 0.8 + Math.random() * 0.3;
+      else depthFactor = 0.7 + Math.random() * 0.5; // Files/memory scattered
       
-      const x = nodeRadius * Math.sin(phi) * Math.cos(theta);
-      const y = nodeRadius * Math.sin(phi) * Math.sin(theta);
-      const z = nodeRadius * Math.cos(phi);
+      const r = sphereRadius * depthFactor;
+      
+      const x = r * Math.sin(phi) * Math.cos(theta);
+      const y = r * Math.sin(phi) * Math.sin(theta);
+      const z = r * Math.cos(phi);
       
       pos.set(node.id, new THREE.Vector3(x, y, z));
       
-      // Initialize floating offset for this node
-      nodeOffsets.current.set(node.id, {
+      // Floating animation offset
+      const floatAmt = node.type === 'project' ? 12 : (node.type === 'identity' ? 8 : 5);
+      nodeOffsets.current.set(node.id, { 
         offset: new THREE.Vector3(
-          (Math.random() - 0.5) * 15,
-          (Math.random() - 0.5) * 15,
-          (Math.random() - 0.5) * 15
-        ),
-        phase: Math.random() * Math.PI * 2
+          (Math.random() - 0.5) * floatAmt,
+          (Math.random() - 0.5) * floatAmt,
+          (Math.random() - 0.5) * floatAmt
+        ), 
+        phase: Math.random() * Math.PI * 2 
       });
     });
 
     return pos;
   }, [filteredNodes]);
 
-  // Generate connection lines between nodes
+  // Generate connection lines - core ONLY connects to identity nodes
   const connections = useMemo(() => {
     const links: { start: THREE.Vector3; end: THREE.Vector3; sourceId: string; targetId: string }[] = [];
     const pos = nodePositions;
     
-    // Create connections between nearby nodes and high-priority nodes
+    // Core ONLY connects to identity nodes (system files)
+    const corePos = pos.get('core_openclaw');
+    if (corePos) {
+      filteredNodes.forEach((node: any) => {
+        if (node.type === 'identity') {
+          const nodePos = pos.get(node.id);
+          if (nodePos) {
+            links.push({ 
+              start: corePos.clone(), 
+              end: nodePos.clone(), 
+              sourceId: 'core_openclaw', 
+              targetId: node.id 
+            });
+          }
+        }
+      });
+    }
+    
+    // Create mesh network between other nodes - connect to nearby nodes
     filteredNodes.forEach((nodeA: any) => {
+      if (nodeA.id === 'core_openclaw' || nodeA.type === 'core') return;
+      
       const posA = pos.get(nodeA.id);
       if (!posA) return;
       
-      // Connect high-priority nodes to nearby nodes
-      if (nodeA.priority > 3) {
-        const connectionsToMake = 2 + Math.floor(Math.random() * 4);
-        let made = 0;
-        
-        // Find nearby nodes
-        const distances = filteredNodes
-          .filter((n: any) => n.id !== nodeA.id)
-          .map((n: any) => {
-            const posB = pos.get(n.id);
-            if (!posB) return { id: n.id, dist: Infinity };
-            return { id: n.id, dist: posA.distanceTo(posB) };
-          })
-          .sort((a, b) => a.dist - b.dist);
-        
-        for (const d of distances) {
-          if (made >= connectionsToMake) break;
-          const posB = pos.get(d.id);
-          if (posB) {
-            links.push({ start: posA.clone(), end: posB.clone(), sourceId: nodeA.id, targetId: d.id });
-            made++;
-          }
+      // Projects connect to MORE nodes
+      const connectionsToMake = nodeA.type === 'project' ? 8 : (nodeA.type === 'identity' ? 4 : (nodeA.type === 'folder' ? 4 : 3));
+      let made = 0;
+      
+      // Find nearby nodes
+      const distances = filteredNodes
+        .filter((n: any) => n.id !== nodeA.id && n.id !== 'core_openclaw')
+        .map((n: any) => {
+          const posB = pos.get(n.id);
+          if (!posB) return { id: n.id, dist: Infinity };
+          return { id: n.id, dist: posA.distanceTo(posB), node: n };
+        })
+        .sort((a, b) => a.dist - b.dist);
+      
+      for (const d of distances) {
+        if (made >= connectionsToMake) break;
+        const posB = pos.get(d.id);
+        if (posB) {
+          links.push({ start: posA.clone(), end: posB.clone(), sourceId: nodeA.id, targetId: d.id });
+          made++;
         }
       }
     });
@@ -246,8 +289,9 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode }: N
     return connected;
   }, [selectedNode, connections]);
 
-  // Animated node positions with floating effect
-  const animatedPositions = useMemo(() => {
+  // Animated node positions with floating effect (placeholder for future animation)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _animatedPositions = useMemo(() => {
     const animPos = new Map<string, THREE.Vector3>();
     const basePos = nodePositions;
     
@@ -261,8 +305,9 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode }: N
     return animPos;
   }, [filteredNodes, nodePositions]);
 
-  // Store original positions and animate within bounds
-  const originalPositions = useRef<Map<string, THREE.Vector3>>(new Map());
+  // Store original positions (placeholder for animation bounds)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _originalPositions = useRef<Map<string, THREE.Vector3>>(new Map());
   
   // Animate nodes with breathing effect only (no positional movement to keep lines connected)
   useFrame(({ clock }) => {
@@ -324,7 +369,7 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode }: N
       
       {/* Nodes */}
       <group ref={groupRef}>
-        {filteredNodes.map((node: any, idx: number) => {
+        {filteredNodes.map((node: any) => {
           const pos = nodePositions.get(node.id);
           if (!pos) return null;
           
@@ -338,21 +383,54 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode }: N
           const isDimmed = selectedNode && !isSelected && !isConnected;
           
           const baseColor = getNodeColor(node);
-          const color = isCenter ? '#00CFFF' : baseColor;
+          // Core is white/yellow, others use teal palette
+          const color = node.type === 'core' ? '#FFFFFF' : baseColor;
           
-          // Larger node sizes - priority based
-          let radius = 2.5;
-          if (node.priority >= 5) radius = 10;      // Projects - biggest
-          else if (node.priority >= 3) radius = 6; // Tasks - medium
-          else radius = 2.5;                        // Memory - smallest
+          // Node sizes by type - projects biggest after core, MORE DRAMATIC
+          let radius = 1.0;
+          if (node.type === 'core') {
+            radius = 16; // Core largest
+          } else if (node.type === 'project') {
+            // Projects much bigger: priority 5 = 12, priority 4 = 9, priority 3 = 7
+            radius = node.priority >= 5 ? 12 : (node.priority >= 4 ? 9 : 7);
+          } else if (node.type === 'identity') {
+            radius = 4;
+          } else if (node.type === 'folder') {
+            radius = 2.5;
+          } else if (node.type === 'file') {
+            radius = 1.0;
+          } else if (node.type === 'memory') {
+            radius = 1.8;
+          }
           
           // Highlighted nodes are bigger
           const isHighlighted = isSearchHighlighted || isSelected || isConnected;
           const finalRadius = isHighlighted ? radius * 1.8 : radius;
           
           // Opacity based on state
-          const opacity = isDimmed ? 0.15 : (isHighlighted ? 1 : 0.65);
-          const emissiveIntensity = isCenter ? 3 : (isHighlighted ? 2 : (isDimmed ? 0.1 : 0.6));
+          const opacity = isDimmed ? 0.15 : (isHighlighted ? 1 : 0.75);
+          const isCore = node.type === 'core';
+          const isProject = node.type === 'project';
+          
+          // Core gets pulsing emissive, projects get bright glow
+          const coreRef = useRef<THREE.Mesh>(null);
+          
+          // Animate core and projects with pulsing glow
+          useFrame(({ clock }) => {
+            if ((isCore || isProject) && coreRef.current) {
+              const t = clock.getElapsedTime();
+              let pulse = 2;
+              if (isCore) {
+                pulse = 2 + Math.sin(t * 2) * 0.8; // Core pulses 1.2-2.8
+              } else if (isProject) {
+                pulse = 1.8 + Math.sin(t * 3 + node.priority) * 0.5; // Projects pulse faster
+              }
+              const mat = coreRef.current.material as THREE.MeshStandardMaterial;
+              mat.emissiveIntensity = pulse;
+            }
+          });
+          
+          const baseEmissive = isCore ? 2.5 : (isProject ? 1.8 : (isHighlighted ? 1.5 : (isDimmed ? 0.05 : 0.4)));
           
           return (
             <group 
@@ -360,6 +438,7 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode }: N
               position={[pos.x, pos.y, pos.z]}
             >
               <mesh
+                ref={isCore ? coreRef : undefined}
                 onClick={(e: ThreeEvent<MouseEvent>) => {
                   e.stopPropagation();
                   handleNodeClick(node);
@@ -368,11 +447,11 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode }: N
                 onPointerOut={handlePointerOut}
                 scale={isHovered ? 1.3 : (isSelected ? 1.4 : 1)}
               >
-                <sphereGeometry args={[finalRadius, 16, 16]} />
+                <sphereGeometry args={[finalRadius, 24, 24]} />
                 <meshStandardMaterial
-                  color={isHighlighted ? '#FFFFFF' : color}
-                  emissive={isHighlighted ? '#FFFFFF' : color}
-                  emissiveIntensity={emissiveIntensity}
+                  color={isCore ? '#FFFFEE' : (isHighlighted ? '#FFFFFF' : color)}
+                  emissive={isCore ? '#FFD700' : (isHighlighted ? '#FFFFFF' : color)}
+                  emissiveIntensity={isCore ? 2.5 : baseEmissive}
                   transparent
                   opacity={opacity}
                 />

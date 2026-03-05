@@ -1,0 +1,2622 @@
+{
+  "generatedAt": "2026-03-05T09:25:41.901Z",
+  "nodes": [
+    {
+      "id": "core_openclaw",
+      "type": "core",
+      "title": "OpenClaw",
+      "description": "AI Personal Assistant - The central neural hub",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "status": "system",
+      "priority": 5,
+      "tags": [
+        "core",
+        "system",
+        "ai"
+      ],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2026-03-05T09:25:41.676Z",
+      "lastActive": "2026-03-05T09:25:41.676Z"
+    },
+    {
+      "id": "identity_agents",
+      "type": "identity",
+      "title": "Agent Workspace Rules",
+      "description": "System config: AGENTS.md",
+      "fileCount": 1,
+      "totalBytes": 8649,
+      "wordCount": 1336,
+      "status": "system",
+      "priority": 4,
+      "tags": [
+        "identity",
+        "system"
+      ],
+      "createdAt": "2026-03-03T23:31:58.030Z",
+      "updatedAt": "2026-03-04T08:09:40.807Z",
+      "lastActive": "2026-03-04T08:09:40.807Z"
+    },
+    {
+      "id": "identity_soul",
+      "type": "identity",
+      "title": "Core Persona & Values",
+      "description": "System config: SOUL.md",
+      "fileCount": 1,
+      "totalBytes": 2225,
+      "wordCount": 354,
+      "status": "system",
+      "priority": 4,
+      "tags": [
+        "identity",
+        "system"
+      ],
+      "createdAt": "2026-03-03T23:31:58.031Z",
+      "updatedAt": "2026-03-04T08:52:18.351Z",
+      "lastActive": "2026-03-04T08:52:18.351Z"
+    },
+    {
+      "id": "identity_user",
+      "type": "identity",
+      "title": "User Profile & Preferences",
+      "description": "System config: USER.md",
+      "fileCount": 1,
+      "totalBytes": 2928,
+      "wordCount": 409,
+      "status": "system",
+      "priority": 4,
+      "tags": [
+        "identity",
+        "system"
+      ],
+      "createdAt": "2026-03-03T23:31:58.033Z",
+      "updatedAt": "2026-03-05T09:14:40.612Z",
+      "lastActive": "2026-03-05T09:14:40.612Z"
+    },
+    {
+      "id": "identity_tools",
+      "type": "identity",
+      "title": "Tool Capabilities",
+      "description": "System config: TOOLS.md",
+      "fileCount": 1,
+      "totalBytes": 1361,
+      "wordCount": 182,
+      "status": "system",
+      "priority": 4,
+      "tags": [
+        "identity",
+        "system"
+      ],
+      "createdAt": "2026-03-03T23:31:58.031Z",
+      "updatedAt": "2026-03-04T02:52:56.347Z",
+      "lastActive": "2026-03-04T02:52:56.347Z"
+    },
+    {
+      "id": "identity_memory",
+      "type": "identity",
+      "title": "Long-term Memory",
+      "description": "System config: MEMORY.md",
+      "fileCount": 1,
+      "totalBytes": 1693,
+      "wordCount": 260,
+      "status": "system",
+      "priority": 4,
+      "tags": [
+        "identity",
+        "system"
+      ],
+      "createdAt": "2026-03-03T23:58:17.427Z",
+      "updatedAt": "2026-03-05T00:19:11.421Z",
+      "lastActive": "2026-03-05T00:19:11.421Z"
+    },
+    {
+      "id": "identity_heartbeat",
+      "type": "identity",
+      "title": "Heartbeat Config",
+      "description": "System config: HEARTBEAT.md",
+      "fileCount": 1,
+      "totalBytes": 168,
+      "wordCount": 29,
+      "status": "system",
+      "priority": 4,
+      "tags": [
+        "identity",
+        "system"
+      ],
+      "createdAt": "2026-03-03T23:31:58.034Z",
+      "updatedAt": "2026-03-03T23:31:58.034Z",
+      "lastActive": "2026-03-03T23:31:58.034Z"
+    },
+    {
+      "id": "identity_identity",
+      "type": "identity",
+      "title": "Identity & Name",
+      "description": "System config: IDENTITY.md",
+      "fileCount": 1,
+      "totalBytes": 315,
+      "wordCount": 54,
+      "status": "system",
+      "priority": 4,
+      "tags": [
+        "identity",
+        "system"
+      ],
+      "createdAt": "2026-03-03T23:31:58.032Z",
+      "updatedAt": "2026-03-04T00:00:29.037Z",
+      "lastActive": "2026-03-04T00:00:29.037Z"
+    },
+    {
+      "id": "identity_keywords",
+      "type": "identity",
+      "title": "Job Search Keywords",
+      "description": "System config: job-search-keywords.md",
+      "fileCount": 1,
+      "totalBytes": 3821,
+      "wordCount": 542,
+      "status": "system",
+      "priority": 4,
+      "tags": [
+        "identity",
+        "system"
+      ],
+      "createdAt": "2026-03-04T21:07:56.598Z",
+      "updatedAt": "2026-03-04T21:24:18.912Z",
+      "lastActive": "2026-03-04T21:24:18.912Z"
+    },
+    {
+      "id": "proj_job_hunt",
+      "type": "project",
+      "title": "Job Search Tracker",
+      "description": "Active job search - applications, keywords, resume",
+      "fileCount": 3,
+      "totalBytes": 8029,
+      "status": "active",
+      "priority": 3,
+      "tags": [
+        "project"
+      ],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2026-03-05T09:25:41.697Z",
+      "lastActive": "2026-03-05T09:25:41.697Z"
+    },
+    {
+      "id": "proj_job_hunt_child_00_keywords_md",
+      "type": "file",
+      "title": "00-keywords.md",
+      "description": "Child of Job Search Tracker",
+      "fileCount": 1,
+      "totalBytes": 6270,
+      "wordCount": 875,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_job_hunt",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T21:41:14.991Z",
+      "updatedAt": "2026-03-05T02:49:55.603Z",
+      "lastActive": "2026-03-05T02:49:55.603Z"
+    },
+    {
+      "id": "proj_job_hunt_child_01_tools_config_md",
+      "type": "file",
+      "title": "01-tools-config.md",
+      "description": "Child of Job Search Tracker",
+      "fileCount": 1,
+      "totalBytes": 1031,
+      "wordCount": 125,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_job_hunt",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T02:49:36.592Z",
+      "updatedAt": "2026-03-05T02:49:36.592Z",
+      "lastActive": "2026-03-05T02:49:36.592Z"
+    },
+    {
+      "id": "proj_job_hunt_child_readme_md",
+      "type": "file",
+      "title": "README.md",
+      "description": "Child of Job Search Tracker",
+      "fileCount": 1,
+      "totalBytes": 728,
+      "wordCount": 73,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_job_hunt",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T21:41:46.729Z",
+      "updatedAt": "2026-03-04T21:41:46.729Z",
+      "lastActive": "2026-03-04T21:41:46.729Z"
+    },
+    {
+      "id": "proj_memory",
+      "type": "project",
+      "title": "Activity Memory Log",
+      "description": "Daily session logs and learning records",
+      "fileCount": 11,
+      "totalBytes": 65558,
+      "status": "active",
+      "priority": 5,
+      "tags": [
+        "project"
+      ],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2026-03-05T09:25:41.699Z",
+      "lastActive": "2026-03-05T09:25:41.699Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_04_gog_setup_md",
+      "type": "file",
+      "title": "2026-03-04-gog-setup.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 3504,
+      "wordCount": 462,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T02:58:27.404Z",
+      "updatedAt": "2026-03-04T02:58:27.404Z",
+      "lastActive": "2026-03-04T02:58:27.404Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_04_job_hunt_timeout_md",
+      "type": "file",
+      "title": "2026-03-04-job-hunt-timeout.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 20979,
+      "wordCount": 2400,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T05:23:26.647Z",
+      "updatedAt": "2026-03-04T05:23:26.647Z",
+      "lastActive": "2026-03-04T05:23:26.647Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_04_model_routing_md",
+      "type": "file",
+      "title": "2026-03-04-model-routing.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 6851,
+      "wordCount": 1028,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T07:38:01.008Z",
+      "updatedAt": "2026-03-04T07:38:01.008Z",
+      "lastActive": "2026-03-04T07:38:01.008Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_04_skill_verification_md",
+      "type": "file",
+      "title": "2026-03-04-skill-verification.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 6672,
+      "wordCount": 1127,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T03:43:20.956Z",
+      "updatedAt": "2026-03-04T03:43:20.956Z",
+      "lastActive": "2026-03-04T03:43:20.956Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_05_code_cleanup_md",
+      "type": "file",
+      "title": "2026-03-05-code-cleanup.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 5160,
+      "wordCount": 830,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T08:25:33.080Z",
+      "updatedAt": "2026-03-05T08:25:33.080Z",
+      "lastActive": "2026-03-05T08:25:33.080Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_05_git_push_fix_md",
+      "type": "file",
+      "title": "2026-03-05-git-push-fix.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 3101,
+      "wordCount": 521,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T04:29:20.021Z",
+      "updatedAt": "2026-03-05T04:29:20.021Z",
+      "lastActive": "2026-03-05T04:29:20.021Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_05_job_cron_test_md",
+      "type": "file",
+      "title": "2026-03-05-job-cron-test.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 5935,
+      "wordCount": 1007,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:04:08.328Z",
+      "updatedAt": "2026-03-05T03:04:08.328Z",
+      "lastActive": "2026-03-05T03:04:08.328Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_05_request_timed_out_before_a_res_md",
+      "type": "file",
+      "title": "2026-03-05-request-timed-out-before-a-res.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 3887,
+      "wordCount": 615,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T07:31:45.983Z",
+      "updatedAt": "2026-03-05T07:31:45.983Z",
+      "lastActive": "2026-03-05T07:31:45.983Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_05_scroll_invert_background_md",
+      "type": "file",
+      "title": "2026-03-05-scroll-invert-background.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 6163,
+      "wordCount": 940,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T05:37:29.533Z",
+      "updatedAt": "2026-03-05T05:37:29.533Z",
+      "lastActive": "2026-03-05T05:37:29.533Z"
+    },
+    {
+      "id": "proj_memory_child_2026_03_05_website_optimization_md",
+      "type": "file",
+      "title": "2026-03-05-website-optimization.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 1151,
+      "wordCount": 179,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T05:38:31.570Z",
+      "updatedAt": "2026-03-05T05:38:31.571Z",
+      "lastActive": "2026-03-05T05:38:31.571Z"
+    },
+    {
+      "id": "proj_memory_child_job_search_2026_03_03_md",
+      "type": "file",
+      "title": "job-search-2026-03-03.md",
+      "description": "Child of Activity Memory Log",
+      "fileCount": 1,
+      "totalBytes": 2155,
+      "wordCount": 305,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T04:01:25.527Z",
+      "updatedAt": "2026-03-04T04:01:25.527Z",
+      "lastActive": "2026-03-04T04:01:25.527Z"
+    },
+    {
+      "id": "proj_client_outreach",
+      "type": "project",
+      "title": "Client Outreach",
+      "description": "Prospect research, outreach, lead tracking",
+      "fileCount": 11,
+      "totalBytes": 21550,
+      "status": "active",
+      "priority": 5,
+      "tags": [
+        "project"
+      ],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2026-03-05T09:25:41.712Z",
+      "lastActive": "2026-03-05T09:25:41.712Z"
+    },
+    {
+      "id": "proj_client_outreach_child_action_plan_md",
+      "type": "file",
+      "title": "action_plan.md",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 520,
+      "wordCount": 86,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T09:59:41.823Z",
+      "updatedAt": "2026-03-04T09:59:41.823Z",
+      "lastActive": "2026-03-04T09:59:41.823Z"
+    },
+    {
+      "id": "proj_client_outreach_child_client_evaluation_system_md",
+      "type": "file",
+      "title": "client_evaluation_system.md",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 2062,
+      "wordCount": 335,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T10:05:06.547Z",
+      "updatedAt": "2026-03-04T10:05:06.549Z",
+      "lastActive": "2026-03-04T10:05:06.549Z"
+    },
+    {
+      "id": "proj_client_outreach_child_client_search_templates_md",
+      "type": "file",
+      "title": "client_search_templates.md",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 1148,
+      "wordCount": 173,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T10:05:20.766Z",
+      "updatedAt": "2026-03-04T10:05:20.766Z",
+      "lastActive": "2026-03-04T10:05:20.766Z"
+    },
+    {
+      "id": "proj_client_outreach_child_leads_txt",
+      "type": "file",
+      "title": "leads.txt",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 9610,
+      "wordCount": 1292,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T10:37:00.813Z",
+      "updatedAt": "2026-03-04T10:37:00.816Z",
+      "lastActive": "2026-03-04T10:37:00.816Z"
+    },
+    {
+      "id": "proj_client_outreach_child_outreach_methodology_md",
+      "type": "file",
+      "title": "outreach_methodology.md",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 2658,
+      "wordCount": 408,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T10:10:49.881Z",
+      "updatedAt": "2026-03-04T10:10:49.881Z",
+      "lastActive": "2026-03-04T10:10:49.881Z"
+    },
+    {
+      "id": "proj_client_outreach_child_pdf_page_1_txt",
+      "type": "file",
+      "title": "pdf_page_1.txt",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 1013,
+      "wordCount": 139,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T10:08:38.222Z",
+      "updatedAt": "2026-03-04T10:08:38.222Z",
+      "lastActive": "2026-03-04T10:08:38.222Z"
+    },
+    {
+      "id": "proj_client_outreach_child_pdf_page_2_txt",
+      "type": "file",
+      "title": "pdf_page_2.txt",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 1401,
+      "wordCount": 188,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T10:08:38.228Z",
+      "updatedAt": "2026-03-04T10:08:38.228Z",
+      "lastActive": "2026-03-04T10:08:38.228Z"
+    },
+    {
+      "id": "proj_client_outreach_child_pdf_page_3_txt",
+      "type": "file",
+      "title": "pdf_page_3.txt",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 1440,
+      "wordCount": 196,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T10:08:38.234Z",
+      "updatedAt": "2026-03-04T10:08:38.234Z",
+      "lastActive": "2026-03-04T10:08:38.234Z"
+    },
+    {
+      "id": "proj_client_outreach_child_prospect_tracker_md",
+      "type": "file",
+      "title": "prospect_tracker.md",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 578,
+      "wordCount": 81,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T10:05:10.666Z",
+      "updatedAt": "2026-03-04T10:05:10.666Z",
+      "lastActive": "2026-03-04T10:05:10.666Z"
+    },
+    {
+      "id": "proj_client_outreach_child_services_md",
+      "type": "file",
+      "title": "services.md",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 629,
+      "wordCount": 95,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T09:59:19.314Z",
+      "updatedAt": "2026-03-04T09:59:19.318Z",
+      "lastActive": "2026-03-04T09:59:19.318Z"
+    },
+    {
+      "id": "proj_client_outreach_child_tahoe_targets_md",
+      "type": "file",
+      "title": "tahoe_targets.md",
+      "description": "Child of Client Outreach",
+      "fileCount": 1,
+      "totalBytes": 491,
+      "wordCount": 74,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_client_outreach",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T09:59:26.367Z",
+      "updatedAt": "2026-03-04T09:59:26.367Z",
+      "lastActive": "2026-03-04T09:59:26.367Z"
+    },
+    {
+      "id": "proj_neural_hub",
+      "type": "project",
+      "title": "Neural Hub Visualization",
+      "description": "3D brain-like visualization of OpenClaw",
+      "fileCount": 20,
+      "totalBytes": 224355,
+      "status": "active",
+      "priority": 5,
+      "tags": [
+        "project"
+      ],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2026-03-05T09:25:41.744Z",
+      "lastActive": "2026-03-05T09:25:41.744Z"
+    },
+    {
+      "id": "proj_neural_hub_child_brief_md",
+      "type": "file",
+      "title": "BRIEF.md",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 3965,
+      "wordCount": 556,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:24:29.120Z",
+      "updatedAt": "2026-03-05T09:15:14.082Z",
+      "lastActive": "2026-03-05T09:15:14.082Z"
+    },
+    {
+      "id": "proj_neural_hub_child_changelog_md",
+      "type": "file",
+      "title": "CHANGELOG.md",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 3558,
+      "wordCount": 529,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T05:35:12.535Z",
+      "updatedAt": "2026-03-05T09:20:39.084Z",
+      "lastActive": "2026-03-05T09:20:39.084Z"
+    },
+    {
+      "id": "proj_neural_hub_child_dist",
+      "type": "folder",
+      "title": "dist",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-05T05:48:09.980Z",
+      "updatedAt": "2026-03-05T09:19:59.509Z",
+      "lastActive": "2026-03-05T09:19:59.509Z"
+    },
+    {
+      "id": "proj_neural_hub_dist_index_html",
+      "type": "file",
+      "title": "index.html",
+      "description": "File in dist",
+      "fileCount": 1,
+      "totalBytes": 666,
+      "wordCount": 46,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub_child_dist",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T05:48:12.989Z",
+      "updatedAt": "2026-03-05T09:19:59.520Z",
+      "lastActive": "2026-03-05T09:19:59.520Z"
+    },
+    {
+      "id": "proj_neural_hub_dist_vite_svg",
+      "type": "file",
+      "title": "vite.svg",
+      "description": "File in dist",
+      "fileCount": 1,
+      "totalBytes": 1497,
+      "wordCount": 90,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub_child_dist",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T05:48:09.983Z",
+      "updatedAt": "2026-03-05T03:25:08.803Z",
+      "lastActive": "2026-03-05T03:25:08.803Z"
+    },
+    {
+      "id": "proj_neural_hub_child_eslint_config_js",
+      "type": "file",
+      "title": "eslint.config.js",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 616,
+      "wordCount": 50,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.372Z",
+      "updatedAt": "2026-03-05T03:25:08.664Z",
+      "lastActive": "2026-03-05T03:25:08.664Z"
+    },
+    {
+      "id": "proj_neural_hub_child_index_html",
+      "type": "file",
+      "title": "index.html",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 400,
+      "wordCount": 33,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T06:34:25.550Z",
+      "updatedAt": "2026-03-05T07:21:07.419Z",
+      "lastActive": "2026-03-05T07:21:07.419Z"
+    },
+    {
+      "id": "proj_neural_hub_child_index_html_vanilla",
+      "type": "file",
+      "title": "index.html.vanilla",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 32951,
+      "wordCount": 3459,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.374Z",
+      "updatedAt": "2026-03-05T07:21:07.422Z",
+      "lastActive": "2026-03-05T07:21:07.422Z"
+    },
+    {
+      "id": "proj_neural_hub_child_node_modules",
+      "type": "folder",
+      "title": "node_modules",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:32.092Z",
+      "updatedAt": "2026-03-05T05:46:48.905Z",
+      "lastActive": "2026-03-05T05:46:48.905Z"
+    },
+    {
+      "id": "proj_neural_hub_child_optimization_md",
+      "type": "file",
+      "title": "OPTIMIZATION.md",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 3957,
+      "wordCount": 587,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T04:35:34.097Z",
+      "updatedAt": "2026-03-05T07:21:07.412Z",
+      "lastActive": "2026-03-05T07:21:07.412Z"
+    },
+    {
+      "id": "proj_neural_hub_child_package_lock_json",
+      "type": "file",
+      "title": "package-lock.json",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 168928,
+      "wordCount": 8703,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:41.115Z",
+      "updatedAt": "2026-03-05T08:46:40.160Z",
+      "lastActive": "2026-03-05T08:46:40.160Z"
+    },
+    {
+      "id": "proj_neural_hub_child_package_json",
+      "type": "file",
+      "title": "package.json",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 954,
+      "wordCount": 75,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.397Z",
+      "updatedAt": "2026-03-05T08:46:40.112Z",
+      "lastActive": "2026-03-05T08:46:40.112Z"
+    },
+    {
+      "id": "proj_neural_hub_child_progress_md",
+      "type": "file",
+      "title": "PROGRESS.md",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 1064,
+      "wordCount": 156,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:24:29.126Z",
+      "updatedAt": "2026-03-05T07:21:07.415Z",
+      "lastActive": "2026-03-05T07:21:07.415Z"
+    },
+    {
+      "id": "proj_neural_hub_child_public",
+      "type": "folder",
+      "title": "public",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.374Z",
+      "updatedAt": "2026-03-05T07:21:07.423Z",
+      "lastActive": "2026-03-05T07:21:07.423Z"
+    },
+    {
+      "id": "proj_neural_hub_public_vite_svg",
+      "type": "file",
+      "title": "vite.svg",
+      "description": "File in public",
+      "fileCount": 1,
+      "totalBytes": 1497,
+      "wordCount": 90,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub_child_public",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T03:25:14.375Z",
+      "updatedAt": "2026-03-05T03:25:08.803Z",
+      "lastActive": "2026-03-05T03:25:08.803Z"
+    },
+    {
+      "id": "proj_neural_hub_child_readme_md",
+      "type": "file",
+      "title": "README.md",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 2555,
+      "wordCount": 224,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.376Z",
+      "updatedAt": "2026-03-05T03:25:08.752Z",
+      "lastActive": "2026-03-05T03:25:08.752Z"
+    },
+    {
+      "id": "proj_neural_hub_child_src",
+      "type": "folder",
+      "title": "src",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.387Z",
+      "updatedAt": "2026-03-05T08:22:30.308Z",
+      "lastActive": "2026-03-05T08:22:30.308Z"
+    },
+    {
+      "id": "proj_neural_hub_src_app_css",
+      "type": "file",
+      "title": "App.css",
+      "description": "File in src",
+      "fileCount": 1,
+      "totalBytes": 17262,
+      "wordCount": 1955,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub_child_src",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T03:25:14.387Z",
+      "updatedAt": "2026-03-05T08:22:30.308Z",
+      "lastActive": "2026-03-05T08:22:30.308Z"
+    },
+    {
+      "id": "proj_neural_hub_src_app_tsx",
+      "type": "file",
+      "title": "App.tsx",
+      "description": "File in src",
+      "fileCount": 1,
+      "totalBytes": 8728,
+      "wordCount": 681,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub_child_src",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T03:25:14.388Z",
+      "updatedAt": "2026-03-05T08:45:31.650Z",
+      "lastActive": "2026-03-05T08:45:31.650Z"
+    },
+    {
+      "id": "proj_neural_hub_src_index_css",
+      "type": "file",
+      "title": "index.css",
+      "description": "File in src",
+      "fileCount": 1,
+      "totalBytes": 178,
+      "wordCount": 29,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub_child_src",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T03:25:14.391Z",
+      "updatedAt": "2026-03-05T03:54:07.005Z",
+      "lastActive": "2026-03-05T03:54:07.005Z"
+    },
+    {
+      "id": "proj_neural_hub_src_main_tsx",
+      "type": "file",
+      "title": "main.tsx",
+      "description": "File in src",
+      "fileCount": 1,
+      "totalBytes": 230,
+      "wordCount": 24,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub_child_src",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T03:25:14.391Z",
+      "updatedAt": "2026-03-05T03:25:08.884Z",
+      "lastActive": "2026-03-05T03:25:08.884Z"
+    },
+    {
+      "id": "proj_neural_hub_child_tech_decisions_md",
+      "type": "file",
+      "title": "TECH_DECISIONS.md",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 135,
+      "wordCount": 20,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:24:29.132Z",
+      "updatedAt": "2026-03-05T03:24:29.133Z",
+      "lastActive": "2026-03-05T03:24:29.133Z"
+    },
+    {
+      "id": "proj_neural_hub_child_tech_notes_md",
+      "type": "file",
+      "title": "TECH_NOTES.md",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 2628,
+      "wordCount": 368,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T05:35:32.016Z",
+      "updatedAt": "2026-03-05T07:21:07.417Z",
+      "lastActive": "2026-03-05T07:21:07.417Z"
+    },
+    {
+      "id": "proj_neural_hub_child_tsconfig_app_json",
+      "type": "file",
+      "title": "tsconfig.app.json",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 742,
+      "wordCount": 55,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.392Z",
+      "updatedAt": "2026-03-05T08:48:05.691Z",
+      "lastActive": "2026-03-05T08:48:05.691Z"
+    },
+    {
+      "id": "proj_neural_hub_child_tsconfig_json",
+      "type": "file",
+      "title": "tsconfig.json",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 119,
+      "wordCount": 15,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.393Z",
+      "updatedAt": "2026-03-05T03:25:08.725Z",
+      "lastActive": "2026-03-05T03:25:08.725Z"
+    },
+    {
+      "id": "proj_neural_hub_child_tsconfig_node_json",
+      "type": "file",
+      "title": "tsconfig.node.json",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 653,
+      "wordCount": 48,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.394Z",
+      "updatedAt": "2026-03-05T03:25:08.733Z",
+      "lastActive": "2026-03-05T03:25:08.733Z"
+    },
+    {
+      "id": "proj_neural_hub_child_vite_config_ts",
+      "type": "file",
+      "title": "vite.config.ts",
+      "description": "Child of Neural Hub Visualization",
+      "fileCount": 1,
+      "totalBytes": 1130,
+      "wordCount": 110,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:25:14.395Z",
+      "updatedAt": "2026-03-05T07:21:07.472Z",
+      "lastActive": "2026-03-05T07:21:07.472Z"
+    },
+    {
+      "id": "proj_skills",
+      "type": "project",
+      "title": "OpenClaw Skills",
+      "description": "Installed skills and capabilities",
+      "fileCount": 8,
+      "totalBytes": 0,
+      "status": "active",
+      "priority": 4,
+      "tags": [
+        "project"
+      ],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2026-03-05T09:25:41.881Z",
+      "lastActive": "2026-03-05T09:25:41.881Z"
+    },
+    {
+      "id": "proj_skills_child_agent_browser",
+      "type": "folder",
+      "title": "agent-browser",
+      "description": "Child of OpenClaw Skills",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-04T03:04:20.761Z",
+      "updatedAt": "2026-03-04T03:04:20.767Z",
+      "lastActive": "2026-03-04T03:04:20.767Z"
+    },
+    {
+      "id": "proj_skills_agent_browser_contributing_md",
+      "type": "file",
+      "title": "CONTRIBUTING.md",
+      "description": "File in agent-browser",
+      "fileCount": 1,
+      "totalBytes": 1626,
+      "wordCount": 264,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_agent_browser",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T03:04:20.762Z",
+      "updatedAt": "2026-03-04T03:04:20.763Z",
+      "lastActive": "2026-03-04T03:04:20.763Z"
+    },
+    {
+      "id": "proj_skills_agent_browser_skill_md",
+      "type": "file",
+      "title": "SKILL.md",
+      "description": "File in agent-browser",
+      "fileCount": 1,
+      "totalBytes": 10224,
+      "wordCount": 1334,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_agent_browser",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T03:04:20.764Z",
+      "updatedAt": "2026-03-04T03:04:20.764Z",
+      "lastActive": "2026-03-04T03:04:20.764Z"
+    },
+    {
+      "id": "proj_skills_agent_browser_meta_json",
+      "type": "file",
+      "title": "_meta.json",
+      "description": "File in agent-browser",
+      "fileCount": 1,
+      "totalBytes": 132,
+      "wordCount": 10,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_agent_browser",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T03:04:20.765Z",
+      "updatedAt": "2026-03-04T03:04:20.765Z",
+      "lastActive": "2026-03-04T03:04:20.765Z"
+    },
+    {
+      "id": "proj_skills_child_brave_search",
+      "type": "folder",
+      "title": "brave-search",
+      "description": "Child of OpenClaw Skills",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-05T02:48:46.874Z",
+      "updatedAt": "2026-03-05T02:49:04.556Z",
+      "lastActive": "2026-03-05T02:49:04.556Z"
+    },
+    {
+      "id": "proj_skills_brave_search_content_js",
+      "type": "file",
+      "title": "content.js",
+      "description": "File in brave-search",
+      "fileCount": 1,
+      "totalBytes": 2582,
+      "wordCount": 254,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_brave_search",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T02:48:46.876Z",
+      "updatedAt": "2026-03-05T02:48:46.877Z",
+      "lastActive": "2026-03-05T02:48:46.877Z"
+    },
+    {
+      "id": "proj_skills_brave_search_package_lock_json",
+      "type": "file",
+      "title": "package-lock.json",
+      "description": "File in brave-search",
+      "fileCount": 1,
+      "totalBytes": 20515,
+      "wordCount": 1102,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_brave_search",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T02:48:46.880Z",
+      "updatedAt": "2026-03-05T02:48:46.880Z",
+      "lastActive": "2026-03-05T02:48:46.880Z"
+    },
+    {
+      "id": "proj_skills_brave_search_package_json",
+      "type": "file",
+      "title": "package.json",
+      "description": "File in brave-search",
+      "fileCount": 1,
+      "totalBytes": 332,
+      "wordCount": 35,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_brave_search",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T02:48:46.881Z",
+      "updatedAt": "2026-03-05T02:48:46.882Z",
+      "lastActive": "2026-03-05T02:48:46.882Z"
+    },
+    {
+      "id": "proj_skills_brave_search_search_js",
+      "type": "file",
+      "title": "search.js",
+      "description": "File in brave-search",
+      "fileCount": 1,
+      "totalBytes": 5329,
+      "wordCount": 557,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_brave_search",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T02:48:46.884Z",
+      "updatedAt": "2026-03-05T02:48:46.884Z",
+      "lastActive": "2026-03-05T02:48:46.884Z"
+    },
+    {
+      "id": "proj_skills_brave_search_skill_md",
+      "type": "file",
+      "title": "SKILL.md",
+      "description": "File in brave-search",
+      "fileCount": 1,
+      "totalBytes": 1273,
+      "wordCount": 177,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_brave_search",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T02:48:46.885Z",
+      "updatedAt": "2026-03-05T02:48:46.886Z",
+      "lastActive": "2026-03-05T02:48:46.886Z"
+    },
+    {
+      "id": "proj_skills_brave_search_meta_json",
+      "type": "file",
+      "title": "_meta.json",
+      "description": "File in brave-search",
+      "fileCount": 1,
+      "totalBytes": 131,
+      "wordCount": 10,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_brave_search",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T02:48:46.887Z",
+      "updatedAt": "2026-03-05T02:48:46.887Z",
+      "lastActive": "2026-03-05T02:48:46.887Z"
+    },
+    {
+      "id": "proj_skills_child_gog",
+      "type": "folder",
+      "title": "gog",
+      "description": "Child of OpenClaw Skills",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-04T00:28:36.342Z",
+      "updatedAt": "2026-03-04T00:28:36.346Z",
+      "lastActive": "2026-03-04T00:28:36.346Z"
+    },
+    {
+      "id": "proj_skills_gog_skill_md",
+      "type": "file",
+      "title": "SKILL.md",
+      "description": "File in gog",
+      "fileCount": 1,
+      "totalBytes": 1748,
+      "wordCount": 215,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_gog",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T00:28:36.344Z",
+      "updatedAt": "2026-03-04T00:28:36.344Z",
+      "lastActive": "2026-03-04T00:28:36.344Z"
+    },
+    {
+      "id": "proj_skills_gog_meta_json",
+      "type": "file",
+      "title": "_meta.json",
+      "description": "File in gog",
+      "fileCount": 1,
+      "totalBytes": 122,
+      "wordCount": 10,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_gog",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T00:28:36.345Z",
+      "updatedAt": "2026-03-04T00:28:36.345Z",
+      "lastActive": "2026-03-04T00:28:36.345Z"
+    },
+    {
+      "id": "proj_skills_child_humanize_ai_text",
+      "type": "folder",
+      "title": "humanize-ai-text",
+      "description": "Child of OpenClaw Skills",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-04T07:33:04.778Z",
+      "updatedAt": "2026-03-04T07:33:04.799Z",
+      "lastActive": "2026-03-04T07:33:04.799Z"
+    },
+    {
+      "id": "proj_skills_humanize_ai_text_skill_md",
+      "type": "file",
+      "title": "SKILL.md",
+      "description": "File in humanize-ai-text",
+      "fileCount": 1,
+      "totalBytes": 5230,
+      "wordCount": 725,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_humanize_ai_text",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T07:33:04.794Z",
+      "updatedAt": "2026-03-04T07:33:04.794Z",
+      "lastActive": "2026-03-04T07:33:04.794Z"
+    },
+    {
+      "id": "proj_skills_humanize_ai_text_meta_json",
+      "type": "file",
+      "title": "_meta.json",
+      "description": "File in humanize-ai-text",
+      "fileCount": 1,
+      "totalBytes": 135,
+      "wordCount": 10,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_humanize_ai_text",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T07:33:04.799Z",
+      "updatedAt": "2026-03-04T07:33:04.799Z",
+      "lastActive": "2026-03-04T07:33:04.799Z"
+    },
+    {
+      "id": "proj_skills_child_nano_pdf",
+      "type": "folder",
+      "title": "nano-pdf",
+      "description": "Child of OpenClaw Skills",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-04T10:07:46.639Z",
+      "updatedAt": "2026-03-04T10:07:46.642Z",
+      "lastActive": "2026-03-04T10:07:46.642Z"
+    },
+    {
+      "id": "proj_skills_nano_pdf_skill_md",
+      "type": "file",
+      "title": "SKILL.md",
+      "description": "File in nano-pdf",
+      "fileCount": 1,
+      "totalBytes": 765,
+      "wordCount": 94,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_nano_pdf",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T10:07:46.640Z",
+      "updatedAt": "2026-03-04T10:07:46.640Z",
+      "lastActive": "2026-03-04T10:07:46.640Z"
+    },
+    {
+      "id": "proj_skills_nano_pdf_meta_json",
+      "type": "file",
+      "title": "_meta.json",
+      "description": "File in nano-pdf",
+      "fileCount": 1,
+      "totalBytes": 127,
+      "wordCount": 10,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_nano_pdf",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T10:07:46.640Z",
+      "updatedAt": "2026-03-04T10:07:46.641Z",
+      "lastActive": "2026-03-04T10:07:46.641Z"
+    },
+    {
+      "id": "proj_skills_child_self_improving_agent",
+      "type": "folder",
+      "title": "self-improving-agent",
+      "description": "Child of OpenClaw Skills",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-04T08:09:10.846Z",
+      "updatedAt": "2026-03-04T08:09:10.877Z",
+      "lastActive": "2026-03-04T08:09:10.877Z"
+    },
+    {
+      "id": "proj_skills_self_improving_agent_skill_md",
+      "type": "file",
+      "title": "SKILL.md",
+      "description": "File in self-improving-agent",
+      "fileCount": 1,
+      "totalBytes": 19704,
+      "wordCount": 2620,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_self_improving_agent",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T08:09:10.877Z",
+      "updatedAt": "2026-03-04T08:09:10.877Z",
+      "lastActive": "2026-03-04T08:09:10.877Z"
+    },
+    {
+      "id": "proj_skills_self_improving_agent_meta_json",
+      "type": "file",
+      "title": "_meta.json",
+      "description": "File in self-improving-agent",
+      "fileCount": 1,
+      "totalBytes": 140,
+      "wordCount": 10,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_self_improving_agent",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T08:09:10.877Z",
+      "updatedAt": "2026-03-04T08:09:10.877Z",
+      "lastActive": "2026-03-04T08:09:10.877Z"
+    },
+    {
+      "id": "proj_skills_child_summarize",
+      "type": "folder",
+      "title": "summarize",
+      "description": "Child of OpenClaw Skills",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-04T03:07:24.008Z",
+      "updatedAt": "2026-03-04T03:07:24.011Z",
+      "lastActive": "2026-03-04T03:07:24.011Z"
+    },
+    {
+      "id": "proj_skills_summarize_skill_md",
+      "type": "file",
+      "title": "SKILL.md",
+      "description": "File in summarize",
+      "fileCount": 1,
+      "totalBytes": 1425,
+      "wordCount": 142,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_summarize",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T03:07:24.009Z",
+      "updatedAt": "2026-03-04T03:07:24.010Z",
+      "lastActive": "2026-03-04T03:07:24.010Z"
+    },
+    {
+      "id": "proj_skills_summarize_meta_json",
+      "type": "file",
+      "title": "_meta.json",
+      "description": "File in summarize",
+      "fileCount": 1,
+      "totalBytes": 128,
+      "wordCount": 10,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_summarize",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-04T03:07:24.011Z",
+      "updatedAt": "2026-03-04T03:07:24.011Z",
+      "lastActive": "2026-03-04T03:07:24.011Z"
+    },
+    {
+      "id": "proj_skills_child_superdesign",
+      "type": "folder",
+      "title": "superdesign",
+      "description": "Child of OpenClaw Skills",
+      "fileCount": 1,
+      "totalBytes": 0,
+      "wordCount": 0,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills",
+      "tags": [
+        "folder",
+        "child"
+      ],
+      "createdAt": "2026-03-05T03:35:46.244Z",
+      "updatedAt": "2026-03-05T03:35:46.248Z",
+      "lastActive": "2026-03-05T03:35:46.248Z"
+    },
+    {
+      "id": "proj_skills_superdesign_skill_md",
+      "type": "file",
+      "title": "SKILL.md",
+      "description": "File in superdesign",
+      "fileCount": 1,
+      "totalBytes": 6178,
+      "wordCount": 736,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_superdesign",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T03:35:46.245Z",
+      "updatedAt": "2026-03-05T03:35:46.245Z",
+      "lastActive": "2026-03-05T03:35:46.245Z"
+    },
+    {
+      "id": "proj_skills_superdesign_meta_json",
+      "type": "file",
+      "title": "_meta.json",
+      "description": "File in superdesign",
+      "fileCount": 1,
+      "totalBytes": 130,
+      "wordCount": 10,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_skills_child_superdesign",
+      "tags": [
+        "file",
+        "grandchild"
+      ],
+      "createdAt": "2026-03-05T03:35:46.247Z",
+      "updatedAt": "2026-03-05T03:35:46.247Z",
+      "lastActive": "2026-03-05T03:35:46.247Z"
+    },
+    {
+      "id": "proj_learnings",
+      "type": "project",
+      "title": "Learning & Improvements",
+      "description": "Errors, learnings, feature requests",
+      "fileCount": 3,
+      "totalBytes": 1812,
+      "status": "active",
+      "priority": 3,
+      "tags": [
+        "project"
+      ],
+      "createdAt": "2025-01-01T00:00:00Z",
+      "updatedAt": "2026-03-05T09:25:41.893Z",
+      "lastActive": "2026-03-05T09:25:41.893Z"
+    },
+    {
+      "id": "proj_learnings_child_errors_md",
+      "type": "file",
+      "title": "ERRORS.md",
+      "description": "Child of Learning & Improvements",
+      "fileCount": 1,
+      "totalBytes": 153,
+      "wordCount": 23,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_learnings",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T08:09:27.887Z",
+      "updatedAt": "2026-03-04T08:09:27.887Z",
+      "lastActive": "2026-03-04T08:09:27.887Z"
+    },
+    {
+      "id": "proj_learnings_child_feature_requests_md",
+      "type": "file",
+      "title": "FEATURE_REQUESTS.md",
+      "description": "Child of Learning & Improvements",
+      "fileCount": 1,
+      "totalBytes": 154,
+      "wordCount": 22,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_learnings",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T08:09:31.256Z",
+      "updatedAt": "2026-03-04T08:09:31.256Z",
+      "lastActive": "2026-03-04T08:09:31.256Z"
+    },
+    {
+      "id": "proj_learnings_child_learnings_md",
+      "type": "file",
+      "title": "LEARNINGS.md",
+      "description": "Child of Learning & Improvements",
+      "fileCount": 1,
+      "totalBytes": 1505,
+      "wordCount": 203,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_learnings",
+      "tags": [
+        "file",
+        "child"
+      ],
+      "createdAt": "2026-03-04T08:09:23.908Z",
+      "updatedAt": "2026-03-04T08:52:09.606Z",
+      "lastActive": "2026-03-04T08:52:09.606Z"
+    },
+    {
+      "id": "mem_2026_03_04_gog_setup",
+      "type": "memory",
+      "title": "2026 03 04 gog setup",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 3504,
+      "wordCount": 462,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_job_hunt",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-04T02:58:27.404Z",
+      "updatedAt": "2026-03-04T02:58:27.404Z",
+      "lastActive": "2026-03-04T02:58:27.404Z"
+    },
+    {
+      "id": "mem_2026_03_04_job_hunt_timeout",
+      "type": "memory",
+      "title": "2026 03 04 job hunt timeout",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 20979,
+      "wordCount": 2400,
+      "status": "system",
+      "priority": 2,
+      "parentId": "proj_job_hunt",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-04T05:23:26.647Z",
+      "updatedAt": "2026-03-04T05:23:26.647Z",
+      "lastActive": "2026-03-04T05:23:26.647Z"
+    },
+    {
+      "id": "mem_2026_03_04_model_routing",
+      "type": "memory",
+      "title": "2026 03 04 model routing",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 6851,
+      "wordCount": 1028,
+      "status": "system",
+      "priority": 2,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-04T07:38:01.008Z",
+      "updatedAt": "2026-03-04T07:38:01.008Z",
+      "lastActive": "2026-03-04T07:38:01.008Z"
+    },
+    {
+      "id": "mem_2026_03_04_skill_verification",
+      "type": "memory",
+      "title": "2026 03 04 skill verification",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 6672,
+      "wordCount": 1127,
+      "status": "system",
+      "priority": 2,
+      "parentId": "proj_memory",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-04T03:43:20.956Z",
+      "updatedAt": "2026-03-04T03:43:20.956Z",
+      "lastActive": "2026-03-04T03:43:20.956Z"
+    },
+    {
+      "id": "mem_2026_03_05_code_cleanup",
+      "type": "memory",
+      "title": "2026 03 05 code cleanup",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 5160,
+      "wordCount": 830,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_memory",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-05T08:25:33.080Z",
+      "updatedAt": "2026-03-05T08:25:33.080Z",
+      "lastActive": "2026-03-05T08:25:33.080Z"
+    },
+    {
+      "id": "mem_2026_03_05_git_push_fix",
+      "type": "memory",
+      "title": "2026 03 05 git push fix",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 3101,
+      "wordCount": 521,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-05T04:29:20.021Z",
+      "updatedAt": "2026-03-05T04:29:20.021Z",
+      "lastActive": "2026-03-05T04:29:20.021Z"
+    },
+    {
+      "id": "mem_2026_03_05_job_cron_test",
+      "type": "memory",
+      "title": "2026 03 05 job cron test",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 5935,
+      "wordCount": 1007,
+      "status": "system",
+      "priority": 2,
+      "parentId": "proj_job_hunt",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-05T03:04:08.328Z",
+      "updatedAt": "2026-03-05T03:04:08.328Z",
+      "lastActive": "2026-03-05T03:04:08.328Z"
+    },
+    {
+      "id": "mem_2026_03_05_request_timed_out_before_a_res",
+      "type": "memory",
+      "title": "2026 03 05 request timed out before a res",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 3887,
+      "wordCount": 615,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-05T07:31:45.983Z",
+      "updatedAt": "2026-03-05T07:31:45.983Z",
+      "lastActive": "2026-03-05T07:31:45.983Z"
+    },
+    {
+      "id": "mem_2026_03_05_scroll_invert_background",
+      "type": "memory",
+      "title": "2026 03 05 scroll invert background",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 6163,
+      "wordCount": 940,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-05T05:37:29.533Z",
+      "updatedAt": "2026-03-05T05:37:29.533Z",
+      "lastActive": "2026-03-05T05:37:29.533Z"
+    },
+    {
+      "id": "mem_2026_03_05_website_optimization",
+      "type": "memory",
+      "title": "2026 03 05 website optimization",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 1151,
+      "wordCount": 179,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_neural_hub",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-05T05:38:31.570Z",
+      "updatedAt": "2026-03-05T05:38:31.571Z",
+      "lastActive": "2026-03-05T05:38:31.571Z"
+    },
+    {
+      "id": "mem_job_search_2026_03_03",
+      "type": "memory",
+      "title": "job search 2026 03 03",
+      "description": "Daily activity log",
+      "fileCount": 1,
+      "totalBytes": 2155,
+      "wordCount": 305,
+      "status": "system",
+      "priority": 1,
+      "parentId": "proj_job_hunt",
+      "tags": [
+        "memory",
+        "log"
+      ],
+      "createdAt": "2026-03-04T04:01:25.527Z",
+      "updatedAt": "2026-03-04T04:01:25.527Z",
+      "lastActive": "2026-03-04T04:01:25.527Z"
+    }
+  ],
+  "links": [
+    {
+      "source": "core_openclaw",
+      "target": "identity_agents",
+      "relationType": "core_to_identity",
+      "strength": 1
+    },
+    {
+      "source": "core_openclaw",
+      "target": "identity_soul",
+      "relationType": "core_to_identity",
+      "strength": 1
+    },
+    {
+      "source": "core_openclaw",
+      "target": "identity_user",
+      "relationType": "core_to_identity",
+      "strength": 1
+    },
+    {
+      "source": "core_openclaw",
+      "target": "identity_tools",
+      "relationType": "core_to_identity",
+      "strength": 1
+    },
+    {
+      "source": "core_openclaw",
+      "target": "identity_memory",
+      "relationType": "core_to_identity",
+      "strength": 1
+    },
+    {
+      "source": "core_openclaw",
+      "target": "identity_heartbeat",
+      "relationType": "core_to_identity",
+      "strength": 1
+    },
+    {
+      "source": "core_openclaw",
+      "target": "identity_identity",
+      "relationType": "core_to_identity",
+      "strength": 1
+    },
+    {
+      "source": "core_openclaw",
+      "target": "identity_keywords",
+      "relationType": "core_to_identity",
+      "strength": 1
+    },
+    {
+      "source": "proj_job_hunt",
+      "target": "proj_job_hunt_child_00_keywords_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_job_hunt",
+      "target": "proj_job_hunt_child_01_tools_config_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_job_hunt",
+      "target": "proj_job_hunt_child_readme_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_04_gog_setup_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_04_job_hunt_timeout_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_04_model_routing_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_04_skill_verification_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_05_code_cleanup_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_05_git_push_fix_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_05_job_cron_test_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_05_request_timed_out_before_a_res_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_05_scroll_invert_background_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_2026_03_05_website_optimization_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_memory",
+      "target": "proj_memory_child_job_search_2026_03_03_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_action_plan_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_client_evaluation_system_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_client_search_templates_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_leads_txt",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_outreach_methodology_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_pdf_page_1_txt",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_pdf_page_2_txt",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_pdf_page_3_txt",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_prospect_tracker_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_services_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_client_outreach",
+      "target": "proj_client_outreach_child_tahoe_targets_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_brief_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_changelog_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_dist",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub_child_dist",
+      "target": "proj_neural_hub_dist_index_html",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_neural_hub_child_dist",
+      "target": "proj_neural_hub_dist_vite_svg",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_eslint_config_js",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_index_html",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_index_html_vanilla",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_node_modules",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_optimization_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_package_lock_json",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_package_json",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_progress_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_public",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub_child_public",
+      "target": "proj_neural_hub_public_vite_svg",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_readme_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_src",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub_child_src",
+      "target": "proj_neural_hub_src_app_css",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_neural_hub_child_src",
+      "target": "proj_neural_hub_src_app_tsx",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_neural_hub_child_src",
+      "target": "proj_neural_hub_src_index_css",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_neural_hub_child_src",
+      "target": "proj_neural_hub_src_main_tsx",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_tech_decisions_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_tech_notes_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_tsconfig_app_json",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_tsconfig_json",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_tsconfig_node_json",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_neural_hub",
+      "target": "proj_neural_hub_child_vite_config_ts",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_skills",
+      "target": "proj_skills_child_agent_browser",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_skills_child_agent_browser",
+      "target": "proj_skills_agent_browser_contributing_md",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_agent_browser",
+      "target": "proj_skills_agent_browser_skill_md",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_agent_browser",
+      "target": "proj_skills_agent_browser_meta_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills",
+      "target": "proj_skills_child_brave_search",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_skills_child_brave_search",
+      "target": "proj_skills_brave_search_content_js",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_brave_search",
+      "target": "proj_skills_brave_search_package_lock_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_brave_search",
+      "target": "proj_skills_brave_search_package_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_brave_search",
+      "target": "proj_skills_brave_search_search_js",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_brave_search",
+      "target": "proj_skills_brave_search_skill_md",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_brave_search",
+      "target": "proj_skills_brave_search_meta_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills",
+      "target": "proj_skills_child_gog",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_skills_child_gog",
+      "target": "proj_skills_gog_skill_md",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_gog",
+      "target": "proj_skills_gog_meta_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills",
+      "target": "proj_skills_child_humanize_ai_text",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_skills_child_humanize_ai_text",
+      "target": "proj_skills_humanize_ai_text_skill_md",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_humanize_ai_text",
+      "target": "proj_skills_humanize_ai_text_meta_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills",
+      "target": "proj_skills_child_nano_pdf",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_skills_child_nano_pdf",
+      "target": "proj_skills_nano_pdf_skill_md",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_nano_pdf",
+      "target": "proj_skills_nano_pdf_meta_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills",
+      "target": "proj_skills_child_self_improving_agent",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_skills_child_self_improving_agent",
+      "target": "proj_skills_self_improving_agent_skill_md",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_self_improving_agent",
+      "target": "proj_skills_self_improving_agent_meta_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills",
+      "target": "proj_skills_child_summarize",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_skills_child_summarize",
+      "target": "proj_skills_summarize_skill_md",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_summarize",
+      "target": "proj_skills_summarize_meta_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills",
+      "target": "proj_skills_child_superdesign",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_skills_child_superdesign",
+      "target": "proj_skills_superdesign_skill_md",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_skills_child_superdesign",
+      "target": "proj_skills_superdesign_meta_json",
+      "relationType": "folder_to_child",
+      "strength": 0.4
+    },
+    {
+      "source": "proj_learnings",
+      "target": "proj_learnings_child_errors_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_learnings",
+      "target": "proj_learnings_child_feature_requests_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    },
+    {
+      "source": "proj_learnings",
+      "target": "proj_learnings_child_learnings_md",
+      "relationType": "project_to_child",
+      "strength": 0.6
+    }
+  ]
+}

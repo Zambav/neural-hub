@@ -7,7 +7,12 @@ import SystemStatusHUD from './components/SystemStatusHUD';
 import InteractionLog from './components/InteractionLog';
 import NodeDetailPanel from './components/NodeDetailPanel';
 import SearchBar from './components/SearchBar';
+import neuralData from './data/neural-data.json';
 import { mockNodes } from './data/mockNodes';
+
+// Use real neural data, fallback to mocks if needed
+const nodes = neuralData?.nodes?.length > 0 ? neuralData.nodes : mockNodes;
+const links = neuralData?.links || [];
 import './App.css';
 
 function NeuralNode({ position, color, isCenter, onClick }: { 
@@ -78,7 +83,7 @@ function App() {
 
   // Handle click from interaction log (direct to detail)
   const handleEntryClick = (nodeId: string) => {
-    const node = mockNodes.find((n: any) => n.id === nodeId);
+    const node = nodes.find((n: any) => n.id === nodeId);
     if (node) {
       setSelectedNode(node);
       setDetailNode(node);
@@ -156,7 +161,7 @@ function App() {
             <pointLight position={[100, 100, 100]} intensity={1} />
             
             {/* 3D Neural Graph with search */}
-            <NeuralGraph onNodeClick={handleNodeClick} searchQuery={searchQuery} selectedNode={selectedNode} onSelectNode={handleSelectNode} />
+            <NeuralGraph onNodeClick={handleNodeClick} searchQuery={searchQuery} selectedNode={selectedNode} onSelectNode={handleSelectNode} nodes={nodes} links={links} />
 
             <OrbitControls 
               enableDamping 
@@ -177,10 +182,10 @@ function App() {
             <div className="stats-value">
               {searchQuery ? (
                 <span style={{ color: '#00D9FF' }}>
-                  {mockNodes.filter((n: any) => n.title?.toUpperCase().includes(searchQuery.toUpperCase())).length}
+                  {nodes.filter((n: any) => n.title?.toUpperCase().includes(searchQuery.toUpperCase())).length}
                 </span>
               ) : (
-                <>9.82 <span className="stats-unit">EXAFLOP/S</span></>
+                <>{nodes.length} <span className="stats-unit">NODES</span></>
               )}
             </div>
           </div>

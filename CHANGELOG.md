@@ -1,6 +1,70 @@
 # Neural Hub Changelog
 
-## v3-performance (Current)
+## v4-data-driven (Current)
+*2026-03-05*
+
+### Data Architecture v4.3
+- **Real data generator v3** reads entire workspace
+- Includes: job-hunt, memory, CLIENT_OUTREACH, projects/neural-hub, skills, .learnings
+- **110 nodes**: 1 core, 8 identity (ALL root .md files!), 6 projects, 72 files, 12 folders, 11 memory
+- **Identity nodes connected to core**: AGENTS.md, SOUL.md, USER.md, TOOLS.md, MEMORY.md, HEARTBEAT.md, IDENTITY.md, job-search-keywords.md
+
+### Visualization Updates (v4.3) - 2026-03-05
+- **Core connects to ALL identity nodes** (8 lines from center)
+- **Projects MUCH bigger**: priority 5 = radius 12, priority 4 = 9, priority 3 = 7
+- **Projects with pulsing glow** - emissive oscillates with sine wave
+- **More random spherical distribution** - angle jitter, depth variation by type
+- **More connections**: projects → 8 nodes, identity → 4, folders → 4, files/memory → 3
+- **Memory darker cyan-green** (#2E8B57)
+- **Fibonacci sphere with randomness** - projects/identity closer to core, files scattered
+
+### Node Size Hierarchy (v4.3)
+```
+Core:       radius 16  (white/yellow, center, pulsing)
+Project:    radius 7-12 (brightest cyan, based on priority, MORE GLOW)
+Identity:   radius 4   (cyan)
+Folder:     radius 2.5 (darker teal)
+Memory:     radius 1.8 (dark cyan-green)
+File:       radius 1.0 (smallest)
+```
+
+### Node Size Hierarchy
+```
+Core:       radius 14  (white/yellow, center)
+Project:    radius 5-8 (brightest cyan, based on priority)
+Identity:   radius 3.5 (cyan)
+Folder:     radius 2.0 (darker teal)
+Memory:     radius 1.5 (dark cyan-green)
+File:       radius 1.0 (smallest)
+```
+
+### Color Palette (Cyan/Teal ONLY)
+```
+Core:       #FFFFFF (white) with #FFD700 (gold) pulsing
+Identity:   #00FFFF (cyan)
+Project:    #00FFFF (brightest cyan)
+Folder:     #00CED1 (darker cyan)
+File:       #008B8B (dark teal)
+Memory:     #2E8B57 (dark cyan-green)
+```
+
+### Interactions
+- Click to select (highlights connected nodes)
+- Double-click for detail panel
+- Search filters nodes in real-time
+- ESC to deselect
+- Hover for tooltips
+- Auto-rotation when idle
+
+### Performance
+- 108 nodes (was 64)
+- ~90 connections
+- Reduced geometry segments for mobile
+- GPU-accelerated with bloom post-processing
+
+---
+
+## v3-performance
 *2026-03-04*
 
 ### Performance
