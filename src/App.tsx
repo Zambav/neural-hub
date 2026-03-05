@@ -2,7 +2,12 @@ import { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
-import * as THREE from 'three';
+import NeuralGraph from './components/NeuralGraph';
+import SystemStatusHUD from './components/SystemStatusHUD';
+import InteractionLog from './components/InteractionLog';
+import NodeDetailPanel from './components/NodeDetailPanel';
+import SearchBar from './components/SearchBar';
+import { mockNodes } from './data/mockNodes';
 import './App.css';
 
 function NeuralNode({ position, color, isCenter, onClick }: { 
@@ -44,8 +49,9 @@ function NeuralNode({ position, color, isCenter, onClick }: {
 
 function App() {
   const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Generate some random node positions
+  // Generate some random node positions for the center hub
   const nodes = Array.from({ length: 30 }, (_, i) => {
     const phi = Math.acos(-1 + (2 * i) / 30);
     const theta = Math.sqrt(30 * Math.PI) * phi;
@@ -60,6 +66,17 @@ function App() {
       color: ['#4A90D9', '#5BC8C0', '#F5A623', '#9B59B6'][i % 4]
     };
   });
+
+  const handleNodeClick = (node: any) => {
+    setSelectedNode(node);
+  };
+
+  const handleEntryClick = (nodeId: string) => {
+    const node = mockNodes.find((n: any) => n.id === nodeId);
+    if (node) {
+      setSelectedNode(node);
+    }
+  };
 
   return (
     <div className="app-container">
@@ -79,10 +96,20 @@ function App() {
             </svg>
           </div>
           <div>
-            <h1 className="logo-title">Neural Hub</h1>
-            <span className="logo-version mono-text">VERSION 4.2.0</span>
+            <h1 className="logo-title">
+              Neural Hub 
+              {selectedNode && (
+                <span id="selected-node-header" className="ml-4 text-xs font-normal text-cyan-700 tracking-normal">
+                  | SELECT_NODE: {selectedNode.title?.toUpperCase()}
+                </span>
+              )}
+            </h1>
+            <span className="logo-version mono-text">VERSION 4.2.0-STARK</span>
           </div>
         </div>
+
+        <SearchBar query={searchQuery} onChange={setSearchQuery} />
+
         <div className="user-section">
           <div className="connection-status">
             <span className="status-label">Connection Status</span>
@@ -91,28 +118,15 @@ function App() {
               SECURE LINK ACTIVE
             </span>
           </div>
+          <button className="user-avatar">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=stark&backgroundColor=00d9ff" alt="User" />
+          </button>
         </div>
       </header>
 
       <main className="main-content">
         <aside className="left-panel">
-          <div className="glass-panel corner-bracket">
-            <div className="panel-header">
-              <h3>Core Metrics</h3>
-              <span className="live-badge mono-text">LIVE</span>
-            </div>
-            <div className="metrics-grid">
-              <div className="metric-item">
-                <div className="metric-header">
-                  <span className="metric-label mono-text">NEURAL LOAD</span>
-                  <span className="metric-value">64.2%</span>
-                </div>
-                <div className="metric-bar">
-                  <div className="metric-bar-fill" style={{ width: '64%' }} />
-                </div>
-              </div>
-            </div>
-          </div>
+          <SystemStatusHUD />
         </aside>
 
         <section className="center-canvas">
@@ -122,19 +136,30 @@ function App() {
             <pointLight position={[100, 100, 100]} intensity={1} />
             
             {/* Center Hub Node */}
-            <NeuralNode position={[0, 0, 0]} color="#00CFFF" isCenter onClick={() => setSelectedNode({ id: 'hub', title: 'OpenClaw Neural Hub' })} />
+            <NeuralNode 
+              position={[0, 0, 0]} 
+              color="#00CFFF" 
+              isCenter 
+              onClick={() => setSelectedNode({ 
+                id: 'hub', 
+                title: 'OpenClaw Neural Hub',
+                type: 'project',
+                status: 'active',
+                priority: 5
+              })} 
+            />
             
-            {/* Other Nodes */}
-            {nodes.map(node => (
-              <NeuralNode 
-                key={node.id} 
-                position={node.position} 
-                color={node.color}
-                onClick={() => setSelectedNode(node)} 
-              />
-            ))}
+            {/* 3D Neural Graph with search */}
+            <NeuralGraph onNodeClick={handleNodeClick} searchQuery={searchQuery} />
 
-            <OrbitControls enableDamping autoRotate autoRotateSpeed={0.3} />
+            <OrbitControls 
+              enableDamping 
+              autoRotate={!searchQuery} 
+              autoRotateSpeed={0.3} 
+              enablePan={false}
+              minDistance={150}
+              maxDistance={600}
+            />
             <EffectComposer>
               <Bloom intensity={1.2} luminanceThreshold={0.2} luminanceSmoothing={0.9} />
             </EffectComposer>
@@ -142,21 +167,20 @@ function App() {
 
           <div className="central-stats">
             <div className="mono-text stats-label">Neural Density</div>
-            <div className="stats-value">9.82 <span className="stats-unit">EXAFLOP/S</span></div>
+            <div className="stats-value">
+              {searchQuery ? (
+                <span style={{ color: '#00D9FF' }}>
+                  {mockNodes.filter((n: any) => n.title?.toUpperCase().includes(searchQuery.toUpperCase())).length}
+                </span>
+              ) : (
+                <>9.82 <span className="stats-unit">EXAFLOP/S</span></>
+              )}
+            </div>
           </div>
         </section>
 
         <aside className="right-panel">
-          <div className="glass-panel corner-bracket">
-            <div className="panel-header">
-              <h3>Interaction Log</h3>
-            </div>
-            <div style={{ color: '#94A3B8', fontSize: '0.75rem', padding: '1rem 0' }}>
-              <p style={{ marginBottom: '0.5rem' }}>14:20:01 - Node linked to core</p>
-              <p style={{ marginBottom: '0.5rem' }}>14:15:20 - Data recall success</p>
-              <p style={{ marginBottom: '0.5rem' }}>14:12:09 - System idle</p>
-            </div>
-          </div>
+          <InteractionLog onEntryClick={handleEntryClick} />
         </aside>
       </main>
 
@@ -164,23 +188,31 @@ function App() {
         <div className="footer-stats">
           <span>STORAGE: 84.2 TB / 100 TB</span>
           <span>TEMP: 32.4°C</span>
+          <span>UPTIME: 342:12:55</span>
+        </div>
+        <div className="footer-systems">
+          <div>
+            <span className="system-dot" />
+            NEURAL_CORE_01: ONLINE
+          </div>
+          <div>
+            <span className="system-dot" />
+            NEURAL_CORE_02: ONLINE
+          </div>
         </div>
       </footer>
 
-      {/* Simple Modal */}
+      {/* Node Detail Modal */}
       {selectedNode && (
-        <div className="modal-overlay" onClick={() => setSelectedNode(null)}>
-          <div className="modal-panel glass-panel corner-bracket" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setSelectedNode(null)}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-            <h2 style={{ color: 'white', fontSize: '1.5rem', marginBottom: '0.5rem' }}>{selectedNode.title}</h2>
-            <p style={{ color: '#00D9FF', fontFamily: 'monospace', fontSize: '0.75rem' }}>ID: {selectedNode.id}</p>
-          </div>
-        </div>
+        <NodeDetailPanel 
+          node={{
+            ...selectedNode,
+            timestamp: selectedNode.timestamp || new Date().toISOString(),
+            description: selectedNode.description || 'Memory fragment data retrieved from neural cache.',
+            tags: selectedNode.tags || ['neural', 'memory', 'cached']
+          }} 
+          onClose={() => setSelectedNode(null)} 
+        />
       )}
     </div>
   );
