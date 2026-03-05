@@ -115,7 +115,7 @@ function App() {
 
         <section className="center-canvas">
           <Canvas 
-            camera={{ position: [0, 0, 350], fov: 60 }}
+            camera={{ position: [0, 0, 500], fov: 60 }}
             // Performance: Limit DPR to 2 for high-DPI screens
             dpr={[1, 2]}
             // Performance: Use demand frame loop when not animating

@@ -56,7 +56,7 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
     }
 
     const count = filteredNodes.length;
-    const radius = 200; // Main radius for the sphere
+    const radius = 280; // Larger radius for more spread out sphere
 
     filteredNodes.forEach((node: any, i: number) => {
       // Proper Fibonacci sphere distribution
@@ -191,10 +191,10 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
           const color = isCenter ? '#00CFFF' : nodeColors[node.type] || '#00D9FF';
           
           // Larger node sizes - priority based
-          let radius = 2;
-          if (node.priority >= 5) radius = 9;      // Projects - biggest
-          else if (node.priority >= 3) radius = 5; // Tasks - medium
-          else radius = 2.5;                        // Memory - smallest
+          let radius = 3;
+          if (node.priority >= 5) radius = 12;      // Projects - biggest
+          else if (node.priority >= 3) radius = 7; // Tasks - medium
+          else radius = 3;                          // Memory - smallest
           
           // Highlighted nodes are bigger
           const finalRadius = isHighlighted ? radius * 1.8 : radius;
