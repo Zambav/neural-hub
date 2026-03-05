@@ -1,4 +1,4 @@
-import { useState, Suspense } from 'react';
+import { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -50,22 +50,6 @@ function NeuralNode({ position, color, isCenter, onClick }: {
 function App() {
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Generate some random node positions for the center hub
-  const nodes = Array.from({ length: 30 }, (_, i) => {
-    const phi = Math.acos(-1 + (2 * i) / 30);
-    const theta = Math.sqrt(30 * Math.PI) * phi;
-    const radius = 120 + Math.random() * 80;
-    return {
-      id: i,
-      position: [
-        radius * Math.sin(phi) * Math.cos(theta),
-        radius * Math.sin(phi) * Math.sin(theta),
-        radius * Math.cos(phi)
-      ] as [number, number, number],
-      color: ['#4A90D9', '#5BC8C0', '#F5A623', '#9B59B6'][i % 4]
-    };
-  });
 
   const handleNodeClick = (node: any) => {
     setSelectedNode(node);
@@ -130,7 +114,20 @@ function App() {
         </aside>
 
         <section className="center-canvas">
-          <Canvas camera={{ position: [0, 0, 350], fov: 60 }}>
+          <Canvas 
+            camera={{ position: [0, 0, 350], fov: 60 }}
+            // Performance: Limit DPR to 2 for high-DPI screens
+            dpr={[1, 2]}
+            // Performance: Use demand frame loop when not animating
+            frameloop="always"
+            // Performance: Disable default antialias (post-processing handles it)
+            gl={{ 
+              antialias: false,
+              powerPreference: 'high-performance',
+              stencil: false,
+              depth: true,
+            }}
+          >
             <color attach="background" args={['#050510']} />
             <ambientLight intensity={0.4} />
             <pointLight position={[100, 100, 100]} intensity={1} />

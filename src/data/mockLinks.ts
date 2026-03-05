@@ -1,4 +1,4 @@
-import { HubLink } from "../types";
+import type { HubLink } from "../types";
 
 // Generate ~180 links connecting nodes
 export const mockLinks: HubLink[] = [

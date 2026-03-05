@@ -1,4 +1,4 @@
-import { HubNode } from '../types';
+import type { HubNode } from '../types';
 
 interface NodeDetailPanelProps {
   node: HubNode;

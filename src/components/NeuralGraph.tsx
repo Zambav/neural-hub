@@ -1,5 +1,5 @@
-import { useMemo, useRef, useState } from 'react';
-import { useFrame, ThreeEvent } from '@react-three/fiber';
+import { useMemo, useRef, useState, memo, useCallback } from 'react';
+import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { mockNodes } from '../data/mockNodes';
@@ -17,23 +17,42 @@ const nodeColors: Record<string, string> = {
 };
 
 function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
-  const [hoveredNode, setHoveredNode] = useState<any>(null);
+  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const groupRef = useRef<THREE.Group>(null);
   
+  // Use useCallback for stable reference
+  const handleNodeClick = useCallback((node: any) => {
+    onNodeClick(node);
+  }, [onNodeClick]);
+
+  // Use useCallback for hover handlers
+  const handlePointerOver = useCallback((e: ThreeEvent<MouseEvent>, node: any) => {
+    e.stopPropagation();
+    setHoveredNode(node.id);
+    document.body.style.cursor = 'pointer';
+  }, []);
+
+  const handlePointerOut = useCallback(() => {
+    setHoveredNode(null);
+    document.body.style.cursor = 'crosshair';
+  }, []);
+
+  // Pre-compute filtered nodes to avoid recalculation in map
+  const filteredNodes = useMemo(() => {
+    return searchQuery 
+      ? mockNodes.filter((n: any) => !n.isCenter && n.title?.toUpperCase().includes(searchQuery.toUpperCase()))
+      : mockNodes.filter((n: any) => !n.isCenter);
+  }, [searchQuery]);
+
   // Generate node positions using Fibonacci sphere distribution
   const nodePositions = useMemo(() => {
-    const pos = new Map();
+    const pos = new Map<string, THREE.Vector3>();
     const centerNode = mockNodes.find((n: any) => n.isCenter);
     
     if (centerNode) {
       pos.set(centerNode.id, new THREE.Vector3(0, 0, 0));
     }
 
-    // Filter nodes based on search query
-    const filteredNodes = searchQuery 
-      ? mockNodes.filter((n: any) => !n.isCenter && n.title?.toUpperCase().includes(searchQuery.toUpperCase()))
-      : mockNodes.filter((n: any) => !n.isCenter);
-    
     filteredNodes.forEach((node: any, i: number) => {
       const phi = Math.acos(-1 + (2 * i) / filteredNodes.length);
       const theta = Math.sqrt(filteredNodes.length * Math.PI) * phi;
@@ -47,38 +66,56 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
     });
 
     return pos;
-  }, [searchQuery]);
+  }, [filteredNodes]);
 
-  // Animate nodes with breathing effect
+  // Animate nodes with breathing effect (optimized - avoid per-frame allocation)
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
     
     const time = clock.getElapsedTime();
-    groupRef.current.children.forEach((child, index) => {
-      const node = mockNodes[index];
-      if (!node || node.isCenter) return;
+    const children = groupRef.current.children;
+    
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      const node = filteredNodes[i];
+      if (!node || node.isCenter) continue;
       
       // Breathing animation
-      const breathe = Math.sin(time * node.priority * 0.5 + index * 0.5) * 0.1;
+      const breathe = Math.sin(time * node.priority * 0.5 + i * 0.5) * 0.1;
       const scale = 1 + breathe;
       child.scale.setScalar(scale);
-    });
+    }
   });
 
-  const isNodeHighlighted = (node: any) => {
-    if (!searchQuery) return false;
-    return node.title?.toUpperCase().includes(searchQuery.toUpperCase());
-  };
+  // Pre-compute highlighted set for O(1) lookup
+  const highlightedIds = useMemo(() => {
+    if (!searchQuery) return new Set<string>();
+    const highlighted = new Set<string>();
+    filteredNodes.forEach((n: any) => {
+      if (n.title?.toUpperCase().includes(searchQuery.toUpperCase())) {
+        highlighted.add(n.id);
+      }
+    });
+    return highlighted;
+  }, [searchQuery, filteredNodes]);
+
+  const isNodeHighlighted = useCallback((nodeId: string) => {
+    return highlightedIds.has(nodeId);
+  }, [highlightedIds]);
+
+  // Pre-create geometry and material to avoid recreation
+  const centerGeometry = useMemo(() => new THREE.IcosahedronGeometry(10, 1), []);
+  const sphereGeometry = useMemo(() => new THREE.SphereGeometry(1, 16, 16), []);
 
   return (
     <group ref={groupRef}>
-      {mockNodes.slice(0, 80).map((node: any) => {
+      {filteredNodes.slice(0, 80).map((node: any) => {
         const pos = nodePositions.get(node.id);
         if (!pos) return null;
         
         const isCenter = node.isCenter;
-        const isHighlighted = isNodeHighlighted(node);
-        const isHovered = hoveredNode?.id === node.id;
+        const isHighlighted = isNodeHighlighted(node.id);
+        const isHovered = hoveredNode === node.id;
         
         const color = isCenter ? '#00CFFF' : nodeColors[node.type] || '#00D9FF';
         const radius = isCenter ? 10 : (node.priority > 3 ? 3 : 2);
@@ -94,23 +131,16 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
             <mesh
               onClick={(e: ThreeEvent<MouseEvent>) => {
                 e.stopPropagation();
-                onNodeClick(node);
+                handleNodeClick(node);
               }}
-              onPointerOver={(e: ThreeEvent<MouseEvent>) => {
-                e.stopPropagation();
-                setHoveredNode(node);
-                document.body.style.cursor = 'pointer';
-              }}
-              onPointerOut={() => {
-                setHoveredNode(null);
-                document.body.style.cursor = 'crosshair';
-              }}
+              onPointerOver={(e: ThreeEvent<MouseEvent>) => handlePointerOver(e, node)}
+              onPointerOut={handlePointerOut}
               scale={isHovered ? 1.3 : 1}
+              geometry={isCenter ? centerGeometry : sphereGeometry}
             >
-              {isCenter ? (
-                <icosahedronGeometry args={[radius, 1]} />
-              ) : (
-                <sphereGeometry args={[finalRadius / 4, 16, 16]} />
+              {/* Scale the sphere geometry for non-center nodes */}
+              {!isCenter && (
+                <group scale={[finalRadius / 4, finalRadius / 4, finalRadius / 4]} />
               )}
               <meshStandardMaterial
                 color={isHighlighted ? '#FFFFFF' : color}
@@ -154,4 +184,5 @@ function NeuralGraph({ onNodeClick, searchQuery }: NeuralGraphProps) {
   );
 }
 
-export default NeuralGraph;
+// Memoize for preventing unnecessary re-renders
+export default memo(NeuralGraph);

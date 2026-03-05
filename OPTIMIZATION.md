@@ -67,6 +67,38 @@ This document tracks the performance optimizations for v2 of the Neural Hub proj
 
 ---
 
+## v3 Performance Optimizations (2026-03-05)
+
+### Vite Build Optimizations
+- [x] Code splitting with manual chunks (three-vendor, postprocessing, react-vendor)
+- [x] Terser minification with console/debugger removal
+- [x] ESNext target for smaller bundles
+- [x] Optimized deps include for faster dev builds
+
+### React/R3F Optimizations
+- [x] Added memo() to NeuralGraph component
+- [x] useCallback for stable event handlers
+- [x] useMemo for filtered nodes and positions
+- [x] Pre-computed highlighted IDs set for O(1) lookup
+- [x] Pre-created geometry objects to avoid recreation
+- [x] Canvas DPR limited to [1, 2]
+- [x] Canvas gl: antialias: false, powerPreference: 'high-performance'
+
+### HTML/Network Optimizations
+- [x] Added preconnect hints for external resources
+- [x] Added dns-prefetch for iconify
+
+### Vanilla JS Canvas Optimizations
+- [x] 30fps throttling (fpsInterval = 1000/30)
+- [x] Node count reduced to 80 (30 large, 30 medium, 20 small)
+- [x] Connection limit capped at 120
+- [x] Camera culling for nodes behind camera
+- [x] Search filtering with O(1) hash lookups
+- [x] Breathing animation amplitude reduced 60%
+- [x] Simplified glow effects
+
+---
+
 ## Future Optimization Ideas
 
 - [ ] Make large nodes even bigger

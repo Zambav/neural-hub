@@ -1,4 +1,4 @@
-import { InteractionEntry } from "../types";
+import type { InteractionEntry } from "../types";
 
 export const mockInteractions: InteractionEntry[] = [
   {
