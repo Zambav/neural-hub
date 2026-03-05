@@ -111,3 +111,13 @@ See `CHANGELOG.md` for detailed iteration history.
 - Brain MRI scans
 - Neural network visualizations
 - Deep space with glowing elements
+
+## Future Features (See FUTURE.md for full list)
+
+1. **Health Layer Toggle** - Color nodes by health (green/amber/red/grey) instead of type
+2. **Timeline Scrubber** - Watch the sphere grow over time with a time slider
+3. **Contextual Right Panel** - Edit projects, mark tasks done, add notes directly
+4. **Real Dashboard Data** - Replace left panel mock data with real OpenClaw metrics
+5. **Animation Speed Control** - Slow animations after user interaction for usability
+6. **Live Pulse** - Show when OpenClaw is actively working on a task
+7. **Surface Tension Effect** - New nodes emerge from parents like bubbles

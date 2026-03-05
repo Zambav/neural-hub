@@ -52,7 +52,7 @@ function DynamicLine({ sourceId, targetId, nodePositions, selectedNode }: {
     sourceId === selectedNode.id || targetId === selectedNode.id
   );
   
-  const opacity = selectedNode ? (isConnected ? 0.9 : 0.02) : 0.15;
+  const opacity = selectedNode ? (isConnected ? 0.9 : 0.2) : 0.25;
   const lineWidth = isConnected ? 1.5 : 0.5;
   
   return (
@@ -101,9 +101,9 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
     setHoveredNode(node.id);
     document.body.style.cursor = 'pointer';
     
-    // Show tooltip
+    // Show tooltip - update with hovered node info even when something is selected
     const tooltip = document.getElementById('node-tooltip');
-    if (tooltip && !selectedNode) {
+    if (tooltip) {
       tooltip.classList.add('visible');
       const ttName = document.getElementById('tt-name');
       const ttType = document.getElementById('tt-type');
@@ -120,12 +120,10 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
     setHoveredNode(null);
     document.body.style.cursor = 'crosshair';
     
-    // Hide tooltip
-    if (!selectedNode) {
-      const tooltip = document.getElementById('node-tooltip');
-      if (tooltip) {
-        tooltip.classList.remove('visible');
-      }
+    // Hide tooltip only if no node is selected (keep showing selected node info)
+    const tooltip = document.getElementById('node-tooltip');
+    if (tooltip && !selectedNode) {
+      tooltip.classList.remove('visible');
     }
   }, [selectedNode]);
 
@@ -147,7 +145,7 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
     const nodes = searchQuery 
       ? allNodes.filter((n: any) => !n.isCenter && n.title?.toUpperCase().includes(searchQuery.toUpperCase()))
       : allNodes.filter((n: any) => !n.isCenter);
-    return nodes.slice(0, 100); // Limit to 100 nodes for performance
+    return nodes.slice(0, 600); // Show up to 600 nodes
   }, [searchQuery, allNodes]);
 
   // Assign colors to nodes for variety
@@ -407,8 +405,8 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
           const isHighlighted = isSearchHighlighted || isSelected || isConnected;
           const finalRadius = isHighlighted ? radius * 1.8 : radius;
           
-          // Opacity based on state
-          const opacity = isDimmed ? 0.15 : (isHighlighted ? 1 : 0.75);
+          // Opacity based on state - less aggressive dimming (20% more visible)
+          const opacity = isDimmed ? 0.35 : (isHighlighted ? 1 : 0.8);
           const isCore = node.type === 'core';
           const isProject = node.type === 'project';
           
@@ -430,7 +428,7 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
             }
           });
           
-          const baseEmissive = isCore ? 2.5 : (isProject ? 1.8 : (isHighlighted ? 1.5 : (isDimmed ? 0.05 : 0.4)));
+          const baseEmissive = isCore ? 2.5 : (isProject ? 1.8 : (isHighlighted ? 1.5 : (isDimmed ? 0.15 : 0.4)));
           
           return (
             <group 
