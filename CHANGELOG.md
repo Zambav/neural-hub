@@ -1,5 +1,37 @@
 # Neural Hub Changelog
 
+## v4.6 - 2026-03-06
+
+### UI/Visual Updates
+- **Background**: Fixed dark gradient issue (root Tailwind class was overriding CSS)
+  - Final gradient: `radial-gradient(circle at center, #050a1f 0%, #050510 100%)`
+- **Outer rings**: Reduced by 15% (320→272, 480→408)
+- **Default zoom**: Increased 5% (0.75→0.79)
+- **Header spacing**: Moved down for better positioning
+- **Left/right panels**: Adjusted vertical positioning
+
+### Node Colors & Specs
+- PROJECT: #00D9FF (bright cyan), 14px radius
+- TASK: #5BC8C0 (teal), 7px radius
+- MEMORY: #4A90D9 (soft blue), 3px radius
+- CORE: #FFD700 (gold) with glow
+
+### Node Opacity
+- Default (idle): 0.1-1.0 based on Z-depth
+- Hovered: 1.0 (hovered), 0.7 (connected), 0.15 (other)
+- Selected: 1.0 (selected), 0.8 (connected), 0.02 (other)
+
+### Link Colors
+- Default: #00D9FF, 0.1 opacity, 0.5px
+- Hovered: #FFFFFF, 1.0 opacity, 1.0px
+- Selected: #FFFFFF, 1.0 opacity, 1.5px
+
+### Debug Notes
+- CSS fix: Removed hardcoded Tailwind `bg-[#050510]` from root div in App.tsx
+- Solution: Used inline style + `!important` in CSS
+
+---
+
 ## v4.5 - 2026-03-05 (Current)
 
 ### Tonight's Updates
