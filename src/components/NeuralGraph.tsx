@@ -1,594 +1,557 @@
-import { useMemo, useRef, useState, memo, useCallback, useEffect } from 'react';
-import { useFrame, type ThreeEvent } from '@react-three/fiber';
-import { Html, Line } from '@react-three/drei';
-import * as THREE from 'three';
-import { mockNodes } from '../data/mockNodes';
+import React, { useRef, useEffect, memo, useCallback } from 'react';
 
-interface HubLink {
-  source: string;
-  target: string;
-  relationType: string;
-  strength: number;
+interface NeuralNode {
+  id: string | number;
+  name: string;
+  type: string;
+  priority: number;
+  radius: number;
+  baseRadius: number;
+  color: string;
+  x3d: number;
+  y3d: number;
+  z3d: number;
+  phase: number;
+  pulseSpeed: number;
+  screenX: number;
+  screenY: number;
+  screenZ: number;
+  screenRadius: number;
+  visible: boolean;
+}
+
+interface NeuralLink {
+  source: NeuralNode;
+  target: NeuralNode;
+}
+
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  color: string;
+}
+
+interface NeuralHubNode {
+  id: string | number;
+  title?: string;
+  name?: string;
+  type: string;
+  priority: number;
+  status: string;
+  timestamp: string;
+  description: string;
+  tags: string[];
 }
 
 interface NeuralGraphProps {
-  onNodeClick: (node: any) => void;
+  nodes: NeuralHubNode[];
+  links: any[];
+  onNodeClick: (node: NeuralHubNode) => void;
   searchQuery: string;
-  selectedNode: any;
-  onSelectNode: (node: any | null) => void;
-  nodes?: any[];
-  links?: HubLink[];
+  selectedNode: NeuralHubNode | null;
+  onSelectNode: (node: NeuralHubNode | null) => void;
 }
 
-// Cyan/Teal color palette - projects brightest, memory darker
-const nodeColors: Record<string, string> = {
-  core: '#FFFFFF',
-  identity: '#00FFFF',
-  project: '#00FFFF', // Brightest cyan for projects
-  folder: '#00CED1',  // Slightly darker
-  file: '#008B8B',    // Dark teal
-  memory: '#2E8B57',  // Dark cyan-green (seagreen)
+const SETTINGS = {
+  radius: 400,
+  repulsionDist: 20,
+  colors: {
+    project: '#00D9FF',
+    task: '#5BC8C0',
+    memory: '#4A90D9',
+    identity: '#00D9FF',
+    folder: '#00D9FF',
+    file: '#5BC8C0',
+    interaction: '#4A90D9'
+  }
 };
 
-// Teal variations for visual depth
-const colorVariations = [
-  '#00FFFF', '#00CED1', '#20B2AA', '#008B8B', '#40E0D0', '#2E8B57',  // Darker greens for variety
-  '#3CB371', '#66CDAA', '#5F9EA0', '#48D1CC', '#00FA9A', '#8DEEEE'
-];
-
-// Simple line component using drei Line
-function DynamicLine({ sourceId, targetId, nodePositions, selectedNode }: {
-  sourceId: string;
-  targetId: string;
-  nodePositions: Map<string, THREE.Vector3>;
-  selectedNode: any;
-}) {
-  const sourcePos = nodePositions.get(sourceId);
-  const targetPos = nodePositions.get(targetId);
-  
-  if (!sourcePos || !targetPos) return null;
-  
-  const isConnected = selectedNode && (
-    sourceId === selectedNode.id || targetId === selectedNode.id
-  );
-  
-  const opacity = selectedNode ? (isConnected ? 0.9 : 0.2) : 0.25;
-  const lineWidth = isConnected ? 1.5 : 0.5;
-  
-  return (
-    <Line
-      points={[sourcePos, targetPos]}
-      color="#00D9FF"
-      lineWidth={lineWidth}
-      transparent
-      opacity={opacity}
-    />
-  );
-}
-
-function NeuralGraph({ onNodeClick, searchQuery = '', selectedNode, onSelectNode, nodes: propNodes, links: propLinks }: NeuralGraphProps) {
-  // Use prop nodes or fallback to mockNodes
-  const allNodes = propNodes || mockNodes;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _allLinks = propLinks || []; // Reserved for future real link rendering
-  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
-  const [proximityNode, setProximityNode] = useState<any | null>(null);
-  const groupRef = useRef<THREE.Group>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _linesRef = useRef<THREE.Group>(null); // Reserved for line group ref
-  
-  // Store node offset positions for floating animation
-  const nodeOffsets = useRef<Map<string, { offset: THREE.Vector3; phase: number }>>(new Map());
-  
-  // Use useCallback for stable reference
-  const handleNodeClick = useCallback((node: any) => {
-    // First select the node (highlight connections)
-    if (selectedNode?.id === node.id) {
-      // If already selected, open detail panel
-      onNodeClick(node);
-    } else {
-      // Otherwise just select/highlight
-      onSelectNode(node);
-    }
-  }, [onNodeClick, onSelectNode, selectedNode]);
-
-  const handleInfoClick = useCallback((node: any) => {
-    onNodeClick(node);
-  }, [onNodeClick]);
-
-  // Use useCallback for hover handlers
-  const handlePointerOver = useCallback((e: ThreeEvent<MouseEvent>, node: any) => {
-    e.stopPropagation();
-    setHoveredNode(node.id);
-    document.body.style.cursor = 'pointer';
-    
-    // Show tooltip - update with hovered node info even when something is selected
-    const tooltip = document.getElementById('node-tooltip');
-    if (tooltip) {
-      tooltip.classList.add('visible');
-      const ttName = document.getElementById('tt-name');
-      const ttType = document.getElementById('tt-type');
-      const ttPriority = document.getElementById('tt-priority');
-      const ttStatus = document.getElementById('tt-status');
-      if (ttName) ttName.textContent = node.title?.substring(0, 20).toUpperCase() || node.id;
-      if (ttType) ttType.textContent = node.type?.toUpperCase() || 'NODE';
-      if (ttPriority) ttPriority.textContent = '★'.repeat(node.priority || 1);
-      if (ttStatus) ttStatus.textContent = node.status?.toUpperCase() || 'ACTIVE';
-    }
-  }, [selectedNode]);
-
-  const handlePointerOut = useCallback(() => {
-    setHoveredNode(null);
-    document.body.style.cursor = 'crosshair';
-    
-    // Hide tooltip when not hovering any sphere (regardless of selection)
-    const tooltip = document.getElementById('node-tooltip');
-    if (tooltip) {
-      tooltip.classList.remove('visible');
-    }
-  }, []);
-
-  // Tooltip follows mouse
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const tooltip = document.getElementById('node-tooltip');
-      // Show tooltip when hovering OR when proximity is active (but not both)
-      if (tooltip && (hoveredNode || proximityNode)) {
-        tooltip.style.left = (e.clientX + 20) + 'px';
-        tooltip.style.top = (e.clientY - 20) + 'px';
-      }
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [hoveredNode, proximityNode]);
-
-  // Pre-compute filtered nodes to avoid recalculation in map
-  // Note: Search filtering is disabled for performance - only updating UI count
-  const filteredNodes = useMemo(() => {
-    try {
-      if (!allNodes || !Array.isArray(allNodes)) return [];
-      // Always show all non-center nodes (limited to 200 for performance)
-      return allNodes.filter((n: any) => n && !n.isCenter).slice(0, 200);
-    } catch (e) {
-      console.warn('Error filtering nodes:', e);
-      return [];
-    }
-  }, [allNodes]);
-
-  // Assign colors to nodes for variety
-  const nodeColorMap = useMemo(() => {
-    const map = new Map<string, string>();
-    filteredNodes.forEach((node: any, i: number) => {
-      // Use type color base + variation based on priority and index
-      const baseColor = nodeColors[node.type] || '#00D9FF';
-      if (node.priority >= 4) {
-        // High priority = use type color
-        map.set(node.id, baseColor);
-      } else {
-        // Lower priority = use variation
-        const variationIndex = (node.priority + i) % colorVariations.length;
-        map.set(node.id, colorVariations[variationIndex]);
-      }
-    });
-    return map;
-  }, [filteredNodes]);
-
-  // Generate node positions - pure Fibonacci sphere for perfectly spherical distribution
-  const nodePositions = useMemo(() => {
-    try {
-      const pos = new Map<string, THREE.Vector3>();
-      
-      // Guard against empty nodes
-      if (!filteredNodes || filteredNodes.length === 0) return pos;
-      
-      // Find core by type === 'core' or isCenter flag
-      const centerNode = allNodes?.find((n: any) => n && (n.type === 'core' || n.isCenter));
-      
-      // Place core at absolute center (0,0,0)
-      if (centerNode) {
-        pos.set(centerNode.id, new THREE.Vector3(0, 0, 0));
-      }
-
-      // Get non-core nodes
-      const nonCoreNodes = filteredNodes.filter((n: any) => n && n.type !== 'core' && !n.isCenter);
-      const totalNodes = nonCoreNodes.length;
-      if (totalNodes === 0) return pos;
-      
-      const sphereRadius = 350;
-      
-      // Pure Fibonacci sphere distribution - NO randomness for perfectly spherical shape
-      nonCoreNodes.forEach((node: any, i: number) => {
-        // Guard against invalid node
-        if (!node || typeof node.priority !== 'number') return;
-        
-        // Golden angle for even distribution
-        const phi = Math.acos(1 - 2 * (i + 0.5) / totalNodes);
-        const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-        
-        // All nodes at roughly same radius for spherical shell
-        // Slight variation based on priority only for visual depth
-        const baseRadius = sphereRadius * 0.75;
-        const priorityOffset = node.priority * 15; // Each priority level = 15 units
-        const r = baseRadius + priorityOffset;
-        
-        const x = r * Math.sin(phi) * Math.cos(theta);
-        const y = r * Math.sin(phi) * Math.sin(theta);
-        const z = r * Math.cos(phi);
-        
-        pos.set(node.id, new THREE.Vector3(x, y, z));
-        
-        // Minimal floating animation
-        const floatAmt = 3;
-        nodeOffsets.current.set(node.id, { 
-          offset: new THREE.Vector3(
-            (Math.random() - 0.5) * floatAmt,
-            (Math.random() - 0.5) * floatAmt,
-            (Math.random() - 0.5) * floatAmt
-          ), 
-          phase: Math.random() * Math.PI * 2 
-        });
-      });
-
-      return pos;
-    } catch (e) {
-      console.warn('Error generating node positions:', e);
-      return new Map();
-    }
-  }, [filteredNodes, allNodes]);
-
-  // Generate connection lines - core ONLY connects to identity nodes
-  const connections = useMemo(() => {
-    const links: { start: THREE.Vector3; end: THREE.Vector3; sourceId: string; targetId: string }[] = [];
-    const pos = nodePositions;
-    
-    // Core ONLY connects to identity nodes (system files)
-    const corePos = pos.get('core_openclaw');
-    if (corePos) {
-      filteredNodes.forEach((node: any) => {
-        if (node.type === 'identity') {
-          const nodePos = pos.get(node.id);
-          if (nodePos) {
-            links.push({ 
-              start: corePos.clone(), 
-              end: nodePos.clone(), 
-              sourceId: 'core_openclaw', 
-              targetId: node.id 
-            });
-          }
-        }
-      });
-    }
-    
-    // Create mesh network between other nodes - connect to nearby nodes
-    filteredNodes.forEach((nodeA: any) => {
-      if (nodeA.id === 'core_openclaw' || nodeA.type === 'core') return;
-      
-      const posA = pos.get(nodeA.id);
-      if (!posA) return;
-      
-      // Projects connect to MORE nodes
-      const connectionsToMake = nodeA.type === 'project' ? 8 : (nodeA.type === 'identity' ? 4 : (nodeA.type === 'folder' ? 4 : 3));
-      let made = 0;
-      
-      // Find nearby nodes
-      const distances = filteredNodes
-        .filter((n: any) => n.id !== nodeA.id && n.id !== 'core_openclaw')
-        .map((n: any) => {
-          const posB = pos.get(n.id);
-          if (!posB) return { id: n.id, dist: Infinity };
-          return { id: n.id, dist: posA.distanceTo(posB), node: n };
-        })
-        .sort((a, b) => a.dist - b.dist);
-      
-      for (const d of distances) {
-        if (made >= connectionsToMake) break;
-        const posB = pos.get(d.id);
-        if (posB) {
-          links.push({ start: posA.clone(), end: posB.clone(), sourceId: nodeA.id, targetId: d.id });
-          made++;
-        }
-      }
-    });
-    
-    return links;
-  }, [filteredNodes, nodePositions]);
-
-  // Build connected node IDs set for selected node
-  const connectedNodeIds = useMemo(() => {
-    const connected = new Set<string>();
-    if (selectedNode) {
-      connections.forEach(link => {
-        if (link.sourceId === selectedNode.id || link.targetId === selectedNode.id) {
-          connected.add(link.sourceId);
-          connected.add(link.targetId);
-        }
-      });
-    }
-    return connected;
-  }, [selectedNode, connections]);
-
-  // Animated node positions with floating effect (placeholder for future animation)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _animatedPositions = useMemo(() => {
-    const animPos = new Map<string, THREE.Vector3>();
-    const basePos = nodePositions;
-    
-    filteredNodes.forEach((node: any) => {
-      const base = basePos.get(node.id);
-      if (base) {
-        animPos.set(node.id, base.clone());
-      }
-    });
-    
-    return animPos;
-  }, [filteredNodes, nodePositions]);
-
-  // Store original positions (placeholder for animation bounds)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _originalPositions = useRef<Map<string, THREE.Vector3>>(new Map());
-  
-  // Animate nodes with breathing effect only (no positional movement to keep lines connected)
-  // Also track camera proximity to large project nodes for dynamic tooltip
-  useFrame(({ clock, camera: cam }) => {
-    if (!groupRef.current) return;
-    
-    const time = clock.getElapsedTime();
-    const children = groupRef.current.children;
-    
-    // Track proximity to large project nodes (camera distance-based tooltip)
-    let closestProject: any = null;
-    let closestDistance = Infinity;
-    const proximityThreshold = 200; // Distance to show proximity tooltip
-    
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-      const node = filteredNodes[i];
-      if (!node) continue;
-      
-      // Breathing animation - subtle scale only (no position change keeps lines connected)
-      const breathe = Math.sin(time * node.priority * 0.5 + i * 0.5) * 0.04;
-      const scale = 1 + breathe;
-      child.scale.setScalar(scale);
-      
-      // Check proximity to large project nodes (for dynamic tooltip)
-      if (node.type === 'project' && node.priority >= 4) {
-        const nodePos = nodePositions.get(node.id);
-        if (nodePos) {
-          const dist = cam.position.distanceTo(nodePos);
-          if (dist < proximityThreshold && dist < closestDistance) {
-            closestDistance = dist;
-            closestProject = node;
-          }
-        }
-      }
-    }
-    
-    // Only update proximity if not hovering (hover takes priority)
-    if (!hoveredNode) {
-      setProximityNode(closestProject);
-    } else {
-      setProximityNode(null);
-    }
+const NeuralGraph: React.FC<NeuralGraphProps> = ({ 
+  nodes: inputNodes, 
+  onNodeClick, 
+  searchQuery, 
+  selectedNode, 
+  onSelectNode 
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const nodesRef = useRef<NeuralNode[]>([]);
+  const linksRef = useRef<NeuralLink[]>([]);
+  const particlesRef = useRef<Particle[]>([]);
+  const stateRef = useRef({
+    width: 0, 
+    height: 0,
+    rotationX: 0, 
+    rotationY: 0,
+    targetRotationX: 0, 
+    targetRotationY: 0,
+    zoom: 0.79, 
+    targetZoom: 0.79,
+    isDragging: false,
+    lastMouseX: 0, 
+    lastMouseY: 0,
+    hoveredId: null as string | number | null,
+    mouseX: 0, 
+    mouseY: 0,
+    isInteracting: false,
+    idleTimer: null as ReturnType<typeof setTimeout> | null
   });
 
-  // Pre-compute highlighted set for O(1) lookup
-  const highlightedIds = useMemo(() => {
-    if (!searchQuery) return new Set<string>();
-    const highlighted = new Set<string>();
-    filteredNodes.forEach((n: any) => {
-      if (n.title?.toUpperCase().includes(searchQuery.toUpperCase())) {
-        highlighted.add(n.id);
+  useEffect(() => {
+    if (!inputNodes || inputNodes.length === 0) return;
+
+    const newNodes: NeuralNode[] = inputNodes.map((node, i) => {
+      const isCore = node.id === 'core_openclaw';
+      const isProject = node.type?.toLowerCase() === 'project';
+      
+      const offset = isProject ? Math.random() * 2000 : 0;
+      const phi = isCore ? 0 : Math.acos(1 - 2 * (i + offset + 0.5) / (inputNodes.length + 100));
+      const theta = isCore ? 0 : Math.PI * (1 + Math.sqrt(5)) * (i + offset);
+      
+      const type = (node.type || 'MEMORY').toUpperCase();
+      const priority = node.priority || 1;
+      
+      let radius = 3;
+      if (type === 'CORE') radius = 36; 
+      else if (type === 'PROJECT') radius = 14; 
+      else if (type === 'TASK') radius = 7;
+      else if (type === 'IDENTITY') radius = 5;
+      
+      const nodeTypeKey = node.type?.toLowerCase() as keyof typeof SETTINGS.colors;
+      const color = SETTINGS.colors[nodeTypeKey] || SETTINGS.colors.memory;
+
+      return {
+        id: node.id,
+        name: node.title || node.name || `${type}_${node.id}`,
+        type,
+        priority,
+        radius,
+        baseRadius: radius,
+        color,
+        x3d: isCore ? 0 : SETTINGS.radius * Math.sin(phi) * Math.cos(theta),
+        y3d: isCore ? 0 : SETTINGS.radius * Math.sin(phi) * Math.sin(theta),
+        z3d: isCore ? 0 : SETTINGS.radius * Math.cos(phi),
+        phase: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.5 + (priority * 0.15),
+        screenX: 0, screenY: 0, screenZ: 0, screenRadius: 0,
+        visible: true
+      };
+    });
+
+    const newLinks: NeuralLink[] = [];
+    newNodes.forEach(node => {
+      if (node.priority >= 3) {
+        const connections = 2 + Math.floor(Math.random() * 2);
+        for (let j = 0; j < connections; j++) {
+          const target = newNodes[Math.floor(Math.random() * newNodes.length)];
+          if (target.id !== node.id) {
+            newLinks.push({ source: node, target });
+          }
+        }
       }
     });
-    return highlighted;
-  }, [searchQuery, filteredNodes]);
 
-  const isNodeHighlighted = useCallback((nodeId: string) => {
-    return highlightedIds.has(nodeId);
-  }, [highlightedIds]);
+    nodesRef.current = newNodes;
+    linksRef.current = newLinks;
+  }, [inputNodes]);
 
-  // Get color for node
-  const getNodeColor = useCallback((node: any) => {
-    return nodeColorMap.get(node.id) || nodeColors[node.type] || '#00D9FF';
-  }, [nodeColorMap]);
+  const createParticles = (x: number, y: number, color: string) => {
+    for (let i = 0; i < 8; i++) {
+      particlesRef.current.push({ 
+        x, y, 
+        vx: (Math.random() - 0.5) * 8, 
+        vy: (Math.random() - 0.5) * 8 - 4, 
+        life: 1, 
+        color 
+      });
+    }
+  };
 
-  // Dynamic line components that follow nodes
-  const ConnectionLines = useMemo(() => {
-    return connections.map((link, i) => (
-      <DynamicLine 
-        key={`link-${i}`}
-        sourceId={link.sourceId}
-        targetId={link.targetId}
-        nodePositions={nodePositions}
-        selectedNode={selectedNode}
-      />
-    ));
-  }, [connections, selectedNode, nodePositions]);
+  const project = useCallback((node: NeuralNode, time: number) => {
+    const { rotationX, rotationY, zoom, mouseX, mouseY, width, height } = stateRef.current;
+    const cosY = Math.cos(rotationY);
+    const sinY = Math.sin(rotationY);
+    const cosX = Math.cos(rotationX);
+    const sinX = Math.sin(rotationX);
+
+    const pulse = 1 + Math.sin(time * node.pulseSpeed + node.phase) * (0.05 + node.priority * 0.03);
+    const x = node.x3d * pulse;
+    const y = node.y3d * pulse;
+    const z = node.z3d * pulse;
+
+    const x1 = x * cosY - z * sinY;
+    const z1 = x * sinY + z * cosY;
+    const y1 = y * cosX - z1 * sinX;
+    const z2 = y * sinX + z1 * cosX;
+
+    const sX = (width / 2) + x1 * zoom;
+    const sY = (height / 2) + y1 * zoom;
+
+    const dx = sX - mouseX;
+    const dy = sY - mouseY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    
+    let repulsionX = 0, repulsionY = 0;
+    if (dist < SETTINGS.repulsionDist) {
+      const force = (SETTINGS.repulsionDist - dist) / SETTINGS.repulsionDist;
+      repulsionX = (dx / dist) * force * 5;
+      repulsionY = (dy / dist) * force * 5;
+    }
+
+    node.screenX = sX + repulsionX;
+    node.screenY = sY + repulsionY;
+    node.screenZ = z2;
+
+    let sizeMult = 1;
+    if (stateRef.current.hoveredId === node.id || (selectedNode && selectedNode.id === node.id)) {
+      sizeMult = 1.3;
+    }
+    node.screenRadius = node.radius * zoom * sizeMult;
+    node.visible = !searchQuery || node.name.toUpperCase().includes(searchQuery.toUpperCase());
+  }, [searchQuery, selectedNode]);
+
+  const drawNode = useCallback((ctx: CanvasRenderingContext2D, node: NeuralNode) => {
+    if (node.id === 'core_openclaw') return; 
+    if (node.screenZ < -SETTINGS.radius * 0.7 && (!selectedNode || selectedNode.id !== node.id)) return;
+    
+    const selectedId = selectedNode?.id;
+    let opacity = 0.5;
+    if (selectedId !== undefined && selectedId !== null) {
+      if (selectedId === node.id) {
+        opacity = 1.0;
+      } else if (linksRef.current.some(l => (l.source.id === selectedId && l.target.id === node.id) || (l.target.id === selectedId && l.source.id === node.id))) {
+        opacity = 0.8;
+      } else {
+        opacity = 0.02;
+      }
+    } else if (stateRef.current.hoveredId !== null) {
+      if (stateRef.current.hoveredId === node.id) {
+        opacity = 1.0;
+      } else if (linksRef.current.some(l => (l.source.id === stateRef.current.hoveredId && l.target.id === node.id) || (l.target.id === stateRef.current.hoveredId && l.source.id === node.id))) {
+        opacity = 0.7;
+      } else {
+        opacity = 0.15;
+      }
+    } else {
+      opacity = (node.screenZ + SETTINGS.radius) / (SETTINGS.radius * 2);
+      opacity = Math.max(0.1, Math.min(1, opacity));
+    }
+
+    if (!node.visible) opacity *= 0.05;
+
+    ctx.beginPath();
+    ctx.arc(node.screenX, node.screenY, node.screenRadius, 0, Math.PI * 2);
+    ctx.fillStyle = node.color;
+    ctx.globalAlpha = opacity;
+    
+    if (stateRef.current.hoveredId === node.id || (selectedNode && selectedNode.id === node.id)) {
+      ctx.shadowBlur = (selectedNode && selectedNode.id === node.id) ? 30 : 25; 
+      ctx.shadowColor = '#00D9FF';
+    } else {
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = node.color;
+    }
+    
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }, [selectedNode]);
+
+  const drawLink = useCallback((ctx: CanvasRenderingContext2D, link: NeuralLink) => {
+    const { source, target } = link;
+    if (!source.visible || !target.visible) return;
+    
+    const selectedId = selectedNode?.id;
+    let opacity = 0.1; let width = 0.5; let color = '#00D9FF';
+
+    if (selectedId !== undefined && selectedId !== null) {
+      if (source.id === selectedId || target.id === selectedId) {
+        opacity = 1.0; width = 1.5; color = '#FFFFFF';
+      } else { return; }
+    } else if (stateRef.current.hoveredId !== null) {
+      if (source.id === stateRef.current.hoveredId || target.id === stateRef.current.hoveredId) {
+        opacity = 1.0; width = 1.0; color = '#FFFFFF';
+      } else { opacity = 0.02; }
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(source.screenX, source.screenY);
+    ctx.lineTo(target.screenX, target.screenY);
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.globalAlpha = opacity;
+    ctx.stroke(); 
+    ctx.globalAlpha = 1;
+  }, [selectedNode]);
+
+  const drawOrientationRing = useCallback((ctx: CanvasRenderingContext2D) => {
+    const { width, height, rotationX, rotationY, zoom } = stateRef.current;
+    const cosY = Math.cos(rotationY);
+    const sinY = Math.sin(rotationY);
+    const cosX = Math.cos(rotationX);
+    const sinX = Math.sin(rotationX);
+    const ringRadius = 80; 
+    const segments = 32;
+
+    ctx.beginPath();
+    for (let i = 0; i <= segments; i++) {
+      const angle = (i / segments) * Math.PI * 2;
+      const x = ringRadius * Math.cos(angle);
+      const y = 0;
+      const z = ringRadius * Math.sin(angle);
+
+      const x1 = x * cosY - z * sinY;
+      const z1 = x * sinY + z * cosY;
+      const y1 = y * cosX - z1 * sinX;
+
+      const sX = (width / 2) + x1 * zoom;
+      const sY = (height / 2) + y1 * zoom;
+
+      if (i === 0) ctx.moveTo(sX, sY);
+      else ctx.lineTo(sX, sY);
+    }
+
+    ctx.save();
+    ctx.strokeStyle = '#00D9FF';
+    ctx.lineWidth = 1.5;
+    ctx.globalAlpha = 0.4;
+    ctx.stroke();
+    ctx.restore();
+  }, []);
+
+  useEffect(() => {
+    let animationFrameId: number;
+    const animate = () => {
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext('2d');
+      if (!canvas || !ctx) return;
+
+      const time = Date.now() * 0.001;
+      const state = stateRef.current;
+
+      ctx.clearRect(0, 0, state.width, state.height);
+      
+      if (!state.isInteracting) state.targetRotationY += 0.0025;
+      
+      state.rotationX += (state.targetRotationX - state.rotationX) * 0.06;
+      state.rotationY += (state.targetRotationY - state.rotationY) * 0.06;
+      state.zoom += (state.targetZoom - state.zoom) * 0.04;
+
+      nodesRef.current.forEach(n => project(n, time));
+
+      ctx.save();
+      ctx.strokeStyle = '#00D9FF';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.globalAlpha = 0.2;
+      ctx.arc(state.width/2, state.height/2, 272 * state.zoom, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.globalAlpha = 0.12;
+      ctx.setLineDash([4, 4]);
+      ctx.arc(state.width/2, state.height/2, 408 * state.zoom, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+      
+      const sortedNodes = [...nodesRef.current].sort((a, b) => a.screenZ - b.screenZ);
+      linksRef.current.forEach(l => drawLink(ctx, l));
+      sortedNodes.forEach(n => drawNode(ctx, n));
+
+      // Sister Tooltips with matching design
+      if (selectedNode) {
+        ctx.save();
+        const sisterLinks = linksRef.current.filter(l => l.source.id === selectedNode.id || l.target.id === selectedNode.id);
+        sisterLinks.forEach(link => {
+          const sister = link.source.id === selectedNode.id ? link.target : link.source;
+          if (sister.id === 'core_openclaw') return;
+
+          const dx = state.mouseX - sister.screenX;
+          const dy = state.mouseY - sister.screenY;
+          const mouseDist = Math.sqrt(dx * dx + dy * dy);
+          
+          let labelOpacity = Math.max(0, Math.min(0.9, (mouseDist - 50) / 100));
+          
+          if (labelOpacity > 0) {
+            ctx.globalAlpha = labelOpacity;
+            const text = sister.name.toUpperCase();
+            ctx.font = 'bold 10px "General Sans", sans-serif';
+            const metrics = ctx.measureText(text);
+            const paddingHorizontal = 8;
+            const paddingVertical = 4;
+            const bubbleWidth = metrics.width + paddingHorizontal * 2;
+            const bubbleHeight = 18;
+            const rx = sister.screenX + 12;
+            const ry = sister.screenY - 9;
+
+            // Glass background
+            ctx.fillStyle = 'rgba(10, 20, 35, 0.9)';
+            ctx.beginPath();
+            ctx.roundRect(rx, ry, bubbleWidth, bubbleHeight, 4);
+            ctx.fill();
+            
+            // Border matching the node color
+            ctx.strokeStyle = sister.color + '66';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // Text
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText(text, rx + paddingHorizontal, ry + 13);
+          }
+        });
+        ctx.restore();
+      }
+
+      // OpenClaw Core
+      const coreNode = nodesRef.current.find(n => n.id === 'core_openclaw');
+      if (coreNode) {
+        const pulse = 0.9 + Math.sin(time * 4.1888) * 0.1;
+        const coreRadius = coreNode.radius * pulse;
+        ctx.beginPath();
+        ctx.arc(coreNode.screenX, coreNode.screenY, coreRadius, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFD700'; 
+        ctx.shadowBlur = 50; 
+        ctx.shadowColor = '#FFD700';
+        ctx.globalAlpha = 1.0; 
+        ctx.fill(); 
+        ctx.shadowBlur = 0; 
+        ctx.globalAlpha = 1;
+      }
+      
+      drawOrientationRing(ctx);
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate();
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [selectedNode, searchQuery, project, drawLink, drawNode, drawOrientationRing]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const state = stateRef.current;
+    state.isInteracting = true;
+    if (state.idleTimer) clearTimeout(state.idleTimer);
+    state.idleTimer = setTimeout(() => { state.isInteracting = false; }, 3000);
+
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    state.mouseX = e.clientX - rect.left;
+    state.mouseY = e.clientY - rect.top;
+
+    if (state.isDragging) {
+      const deltaX = e.clientX - state.lastMouseX;
+      const deltaY = e.clientY - state.lastMouseY;
+      state.targetRotationY -= deltaX * 0.005;
+      state.targetRotationX -= deltaY * 0.003;
+    } else {
+      const offX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+      const offY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+      state.targetRotationY += offX * 0.002;
+      state.targetRotationX = -offY * 0.3;
+    }
+    state.lastMouseX = e.clientX;
+    state.lastMouseY = e.clientY;
+
+    let hit: NeuralNode | null = null;
+    for (const node of nodesRef.current) {
+      const dx = state.mouseX - node.screenX;
+      const dy = state.mouseY - node.screenY;
+      if (Math.sqrt(dx*dx + dy*dy) < node.screenRadius + 8) {
+        hit = node; break;
+      }
+    }
+
+    if (hit && !selectedNode) {
+      state.hoveredId = hit.id;
+      const tooltip = document.getElementById('node-tooltip');
+      if (tooltip) {
+        tooltip.classList.add('visible');
+        tooltip.style.left = (e.clientX + 20) + 'px';
+        tooltip.style.top = (e.clientY - 20) + 'px';
+        const ttName = document.getElementById('tt-name');
+        const ttType = document.getElementById('tt-type');
+        const ttPriority = document.getElementById('tt-priority');
+        if (ttName) ttName.innerText = hit.name;
+        if (ttType) ttType.innerText = hit.type;
+        if (ttPriority) ttPriority.innerHTML = '★'.repeat(hit.priority);
+      }
+    } else {
+      state.hoveredId = null;
+      const tooltip = document.getElementById('node-tooltip');
+      if (tooltip) tooltip.classList.remove('visible');
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    const state = stateRef.current;
+    let hit: NeuralNode | null = null;
+    for (const node of nodesRef.current) {
+      const dx = state.mouseX - node.screenX;
+      const dy = state.mouseY - node.screenY;
+      if (Math.sqrt(dx*dx + dy*dy) < node.screenRadius + 8) {
+        hit = node; break;
+      }
+    }
+
+    if (hit) {
+      const originalNode = inputNodes.find(n => n.id === hit!.id);
+      createParticles(e.clientX, e.clientY, hit.color);
+      onSelectNode(originalNode || null);
+      onNodeClick(originalNode || ({} as any));
+      state.targetZoom = 0.9;
+      state.targetRotationY = -Math.atan2(hit.x3d, hit.z3d);
+      state.targetRotationX = Math.asin(hit.y3d / SETTINGS.radius);
+    } else if (selectedNode) {
+      onSelectNode(null);
+      state.targetZoom = 0.75;
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    stateRef.current.isDragging = true;
+    stateRef.current.lastMouseX = e.clientX;
+    stateRef.current.lastMouseY = e.clientY;
+  };
+
+  const handleMouseUp = () => {
+    stateRef.current.isDragging = false;
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    const zoomStep = 0.1;
+    const delta = e.deltaY > 0 ? -zoomStep : zoomStep;
+    stateRef.current.targetZoom = Math.max(0.3, Math.min(2.5, stateRef.current.targetZoom + delta));
+  };
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      if (!containerRef.current || !canvasRef.current) return;
+      const { offsetWidth, offsetHeight } = containerRef.current;
+      stateRef.current.width = offsetWidth;
+      stateRef.current.height = offsetHeight;
+      canvasRef.current.width = offsetWidth * window.devicePixelRatio;
+      canvasRef.current.height = offsetHeight * window.devicePixelRatio;
+      const ctx = canvasRef.current.getContext('2d');
+      if (ctx) ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    });
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <group>
-      {/* Connection Lines - Dynamic */}
-      {ConnectionLines}
-      
-      {/* Proximity Tooltip - shows when camera is close to a large project */}
-      {proximityNode && !hoveredNode && (
-        <Html
-          position={nodePositions.get(proximityNode.id)?.toArray() || [0, 0, 0]}
-          center
-          distanceFactor={150}
-          style={{
-            pointerEvents: 'none',
-            transition: 'opacity 0.3s',
-          }}
-        >
-          <div style={{
-            background: 'rgba(0,20,35,0.85)',
-            color: '#00D9FF',
-            fontSize: '8px',
-            padding: '3px 6px',
-            borderRadius: '3px',
-            fontFamily: "'JetBrains Mono', monospace",
-            whiteSpace: 'nowrap',
-            border: '1px solid rgba(0,217,255,0.4)',
-            boxShadow: '0 0 10px rgba(0,217,255,0.3)',
-          }}>
-            {proximityNode.title?.substring(0, 18).toUpperCase()}
-          </div>
-        </Html>
-      )}
-      
-      {/* Nodes */}
-      <group ref={groupRef}>
-        {filteredNodes.map((node: any) => {
-          const pos = nodePositions.get(node.id);
-          if (!pos) return null;
-          
-          const isCenter = node.isCenter;
-          const isSearchHighlighted = isNodeHighlighted(node.id);
-          const isHovered = hoveredNode === node.id;
-          const isSelected = selectedNode?.id === node.id;
-          const isConnected = selectedNode && connectedNodeIds.has(node.id);
-          
-          // Dim unconnected nodes when something is selected
-          const isDimmed = selectedNode && !isSelected && !isConnected;
-          
-          const baseColor = getNodeColor(node);
-          // Core is white/yellow, others use teal palette
-          const color = node.type === 'core' ? '#FFFFFF' : baseColor;
-          
-          // Node sizes by type - projects biggest after core, MORE DRAMATIC
-          let radius = 1.0;
-          if (node.type === 'core') {
-            radius = 16; // Core largest
-          } else if (node.type === 'project') {
-            // Projects much bigger: priority 5 = 12, priority 4 = 9, priority 3 = 7
-            radius = node.priority >= 5 ? 12 : (node.priority >= 4 ? 9 : 7);
-          } else if (node.type === 'identity') {
-            radius = 4;
-          } else if (node.type === 'folder') {
-            radius = 2.5;
-          } else if (node.type === 'file') {
-            radius = 1.0;
-          } else if (node.type === 'memory') {
-            radius = 1.8;
-          }
-          
-          // Highlighted nodes are bigger
-          const isHighlighted = isSearchHighlighted || isSelected || isConnected;
-          const finalRadius = isHighlighted ? radius * 1.8 : radius;
-          
-          // Opacity based on state - less aggressive dimming (20% more visible)
-          const opacity = isDimmed ? 0.35 : (isHighlighted ? 1 : 0.8);
-          const isCore = node.type === 'core';
-          const isProject = node.type === 'project';
-          
-          // Core gets pulsing emissive, projects get bright glow
-          const coreRef = useRef<THREE.Mesh>(null);
-          
-          // Animate core and projects with pulsing glow
-          useFrame(({ clock }) => {
-            if ((isCore || isProject) && coreRef.current) {
-              const t = clock.getElapsedTime();
-              let pulse = 2;
-              if (isCore) {
-                pulse = 2 + Math.sin(t * 2) * 0.8; // Core pulses 1.2-2.8
-              } else if (isProject) {
-                pulse = 1.8 + Math.sin(t * 3 + node.priority) * 0.5; // Projects pulse faster
-              }
-              const mat = coreRef.current.material as THREE.MeshStandardMaterial;
-              mat.emissiveIntensity = pulse;
-            }
-          });
-          
-          const baseEmissive = isCore ? 2.5 : (isProject ? 1.8 : (isHighlighted ? 1.5 : (isDimmed ? 0.15 : 0.4)));
-          
-          return (
-            <group 
-              key={node.id} 
-              position={[pos.x, pos.y, pos.z]}
-            >
-              <mesh
-                ref={isCore ? coreRef : undefined}
-                onClick={(e: ThreeEvent<MouseEvent>) => {
-                  e.stopPropagation();
-                  handleNodeClick(node);
-                }}
-                onPointerOver={(e: ThreeEvent<MouseEvent>) => handlePointerOver(e, node)}
-                onPointerOut={handlePointerOut}
-                scale={isHovered ? 1.3 : (isSelected ? 1.4 : 1)}
-              >
-                <sphereGeometry args={[finalRadius, 48, 48]} />
-                <meshStandardMaterial
-                  color={isCore ? '#FFFFEE' : (isHighlighted ? '#FFFFFF' : color)}
-                  emissive={isCore ? '#FFD700' : (isHighlighted ? '#FFFFFF' : color)}
-                  emissiveIntensity={isCore ? 2.5 : baseEmissive}
-                  transparent
-                  opacity={opacity}
-                />
-              </mesh>
-              
-              {/* Node label on hover or search/selection highlight */}
-              {(isHovered || isHighlighted) && !isCenter && (
-                <Html
-                  position={[0, finalRadius + 5, 0]}
-                  center
-                  distanceFactor={150}
-                  style={{
-                    pointerEvents: 'none',
-                    transition: 'opacity 0.2s',
-                  }}
-                >
-                  <div style={{
-                    background: 'rgba(0,15,25,0.95)',
-                    color: isHighlighted ? '#00D9FF' : '#fff',
-                    fontSize: '9px',
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    fontFamily: "'JetBrains Mono', monospace",
-                    whiteSpace: 'nowrap',
-                    border: `1px solid ${isHighlighted ? '#00D9FF' : 'rgba(0,217,255,0.3)'}`,
-                    boxShadow: isHighlighted ? '0 0 15px rgba(0,217,255,0.6)' : 'none',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4px',
-                    minWidth: '120px'
-                  }}>
-                    <div style={{ fontWeight: 700 }}>{node.title?.substring(0, 22).toUpperCase()}</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ color: '#F5A623', fontSize: '8px' }}>{'★'.repeat(node.priority || 1)}</span>
-                      {isSelected && !isSearchHighlighted && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleInfoClick(node);
-                          }}
-                          style={{
-                            background: 'rgba(0,217,255,0.3)',
-                            border: '1px solid #00D9FF',
-                            color: '#00D9FF',
-                            fontSize: '8px',
-                            padding: '2px 8px',
-                            borderRadius: '3px',
-                            cursor: 'pointer',
-                            pointerEvents: 'auto',
-                            textTransform: 'uppercase',
-                            fontWeight: 600
-                          }}
-                        >
-                          Info
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </Html>
-              )}
-            </group>
-          );
-        })}
-      </group>
-    </group>
+    <div 
+      ref={containerRef} 
+      className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden"
+      onMouseMove={handleMouseMove}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+      onWheel={handleWheel}
+    >
+      <canvas ref={canvasRef} className="w-full h-full cursor-crosshair" />
+    </div>
   );
-}
+};
 
-// Memoize for preventing unnecessary re-renders
 export default memo(NeuralGraph);

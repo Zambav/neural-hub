@@ -30,10 +30,17 @@ export default defineConfig({
       target: 'esnext',
     },
   },
-  // Server performance
+  // Server performance and API Proxy
   server: {
     hmr: {
       overlay: true,
+    },
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:18789',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api'),
+      },
     },
   },
 })

@@ -57,7 +57,20 @@
 
 ---
 
-## Browser Requirements
+## CSS / Tailwind Override Issue (2026-03-06)
+
+### Problem
+CSS changes to background colors and styles were not applying. The root cause was a **Tailwind class** `bg-[#050510]` hardcoded directly on the root `<div>` in App.tsx, which overrode all CSS changes.
+
+### Solution
+1. Remove the dark Tailwind background class from the root element
+2. Use inline styles for critical styles: `style={{ background: '...' }}`
+3. Use `!important` in CSS as a fallback
+
+### Prevention
+- Avoid setting background colors on root elements via Tailwind classes when using CSS for them
+- Use inline styles for dynamic theming or ensure CSS specificity is higher
+- When debugging CSS not applying, check for inline styles and Tailwind classes on the element itself
 
 - WebGL support
 - ES2020+ JavaScript
