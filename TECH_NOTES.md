@@ -1,87 +1,66 @@
-# Neural Hub - Performance & Tech Notes
+# Neural Hub - Technical Notes
 
-## Current Performance Optimizations
+## Current Stack (v4+)
+
+- **Renderer**: React Three Fiber (@react-three/fiber) - WebGL
+- **Post-processing**: @react-three/postprocessing (Bloom)
+- **Helpers**: Drei (@react-three/drei) for Html, Line, etc.
+- **Build**: Vite with code splitting
+
+## Current Performance Settings
 
 ### Rendering
-- 30fps frame throttling (was 60fps)
-- 80 nodes with Fibonacci sphere distribution
-- ~120 connection lines
-- LOD culling for nodes behind camera
-- Canvas: `willReadFrequently: false, alpha: false`
+- Node limit: 600 nodes
+- Sphere geometry: 48x48 segments
+- Fibonacci sphere distribution (no randomness)
+- Canvas DPR: Limited to 2
+
+### React Optimization
+- `memo()` on NeuralGraph component
+- `useCallback` for event handlers
+- `useMemo` for filtered nodes, positions, colors
+- Node positions computed once in useMemo
 
 ### Animation
-- Pulse animation speed: 0.25 + priority*0.075
-- Movement amplitude: 0.02 + priority*0.012 (60% smaller than v1)
-- Auto-rotation when idle
-
-### Interaction
-- Click+drag navigation (inverted for natural feel)
-- Mouse wheel zoom (0.2x to 2x range)
-- Proximity labels for project nodes (80px threshold)
-- Hover detection with tooltips
+- Breathing animation via useFrame (scale only, not position)
+- Core and project nodes pulse with emissive intensity
+- Float offset stored in ref (not causing re-renders)
 
 ---
 
-## Potential Future Optimizations
+## Known Issues & Pain Points
+
+1. **Animation too aggressive** - Pulsing/breathing makes clicking hard
+   - Solution: Add speed control (P0)
+
+2. **Proximity labels need tuning** - Threshold may need adjustment
+   - Currently 200 units, may need to increase
+
+3. **Camera in useFrame** - Must use `camera` from useFrame state, not useThree
+   - Bug fix: was using useThree() which doesn't work inside useFrame
+
+---
+
+## Future Optimization Ideas
 
 ### High Priority
-1. **Reduce node count to 50** - Most users won't notice with size variance
-2. **Disable connection lines** - Draw to offscreen canvas once, then blit
-3. **Pre-render static elements** - Grid/background to offscreen canvas
+1. **Animation speed control** - Slow after interaction, ramp up over 5s
+2. **Increase sphere segments** - Already at 48, could go higher on powerful devices
 
 ### Medium Priority
-4. **Lower to 24fps** - Save 20% CPU, barely noticeable
-5. **Remove auto-rotation** - Only rotate on drag
-6. **Batch canvas operations** - Use path2D for similar operations
-7. **Pre-calculate colors with opacity** - Avoid globalAlpha state changes
+3. **LOD for distant nodes** - Reduce geometry when zoomed out
+4. **Connection line optimization** - Only render connected lines when selected
 
-### Low Priority / Experimental
-8. **Use Float32Array instead of objects** - More cache-friendly node data
-9. **Document visibility check** - Skip frames when tab hidden
-10. **Web Workers** - Offload calculation to background thread
-11. **WebGL** - Switch from Canvas 2D to WebGL for better GPU usage
-12. **Level of Detail (LOD)** - Different node detail at different zoom levels
+### Low Priority
+5. **Web Workers** - Offload position calculations
+6. **InstancedMesh** - For very large node counts (>1000)
 
 ---
 
-## GPU Optimization Checklist
+## Browser Requirements
 
-- [x] `willReadFrequently: false`
-- [x] `alpha: false` 
-- [x] Minimize `globalAlpha` changes
-- [x] LOD culling behind camera
-- [x] Batch similar draw operations
-
----
-
-## File Structure
-
-```
-neural-hub/
-├── public/
-│   └── assets/
-│       └── background.JPG    # Background image
-├── src/
-│   ├── components/           # React components (v1)
-│   ├── data/                 # Mock data
-│   └── App.tsx               # Main React app (v1)
-├── index.html                # Standalone Canvas version (v2/v3)
-├── CHANGELOG.md              # This file
-├── BRIEF.md                  # Project brief
-├── PROGRESS.md               # Progress tracking
-└── README.md                 # Project readme
-```
-
----
-
-## Browser Support
-
-Tested on:
-- Chrome 90+
-- Firefox 88+
-- Edge 90+
-
-Requirements:
-- Canvas API
-- ES6+ JavaScript
+- WebGL support
+- ES2020+ JavaScript
 - CSS backdrop-filter (for glass panels)
+
+Tested on Chrome, Firefox, Edge (modern versions)

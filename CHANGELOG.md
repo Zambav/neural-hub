@@ -1,15 +1,38 @@
 # Neural Hub Changelog
 
-## v4.4 - 2026-03-05 (Current)
+## v4.5 - 2026-03-05 (Current)
+
+### Tonight's Updates
+- **Pure Fibonacci Sphere Distribution**: Removed all randomness, nodes now evenly distributed on spherical shell (like a planet/solar system)
+- **Proximity Tooltips**: When camera is within 200 units of large project nodes (priority 4+), small labels appear showing project name
+- **Hover Tooltip Fix**: Tooltip now properly hides when mouse leaves any sphere (previously stayed visible if node was selected)
+- **Smoother Spheres**: Increased sphere geometry from 24x24 to 48x48 segments
+- **Float Animation Reduced**: Decreased from 12/8/5 to 10/7/4 for less erratic movement
+
+### Visualization Specs
+- Core at center (0,0,0), radius 16, white/gold pulsing
+- Projects: radius 7-12 based on priority (5=12, 4=9, 3=7)
+- Identity: radius 4
+- Folders: radius 2.5
+- Files: radius 1.0
+- Memory: radius 1.8
+- All non-core nodes on single Fibonacci shell at ~350 radius
+
+### Interactions
+- Click to select (highlights node + connected nodes)
+- Hover shows tooltip with node info (name, type, priority stars, status)
+- Proximity labels appear on large projects when zoomed in
+- Tooltip follows mouse position
+- ESC or click empty space to deselect
+
+---
+
+## v4.4 - 2026-03-05
 
 ### Visualization Updates
 - **Fake data generator** creates 2030 nodes (100 projects, 1387 files, 304 folders)
 - **Node limit increased** from 100 to 600 for full sphere rendering
 - **LOD fix**: Reduced dimming by 20% - nodes stay visible when zoomed out
-  - Dimmed opacity: 0.15 → 0.35
-  - Non-highlighted opacity: 0.75 → 0.8
-  - Dimmed emissive: 0.05 → 0.15
-  - Connection line opacity: 0.02 → 0.2
 - **Tooltip fix**: Shows hovered node info even when a node is selected
 - **More connections**: projects → 8 nodes, identity → 4, folders → 4, files/memory → 3
 - **Pulsing glow** on projects - emissive oscillates with sine wave
@@ -22,7 +45,6 @@ Identity:   radius 4   (cyan)
 Folder:     radius 2.5 (darker teal)
 Memory:     radius 1.8 (dark cyan-green)
 File:       radius 1.0 (smallest)
-Task:       radius 1.5 (cyan-green)
 ```
 
 ### Color Palette (Cyan/Teal ONLY)
@@ -38,16 +60,6 @@ Memory:     #2E8B57 (dark cyan-green)
 ### Data
 - **Real data**: 110 nodes (run `npx tsx src/data/generateNeuralData.ts`)
 - **Fake data**: 2030 nodes (run `npx tsx src/data/generateFakeData.ts`)
-- Identity nodes: 8 (ALL root .md files connected to core)
-- Projects: 100 (in fake data)
-
-### Interactions
-- Click to select (highlights connected nodes)
-- Hover shows tooltip with node info
-- Tooltip updates on hover even when node selected
-- Search filters nodes in real-time
-- ESC to deselect
-- Auto-rotation when idle
 
 ---
 

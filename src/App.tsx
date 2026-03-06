@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -9,6 +9,20 @@ import NodeDetailPanel from './components/NodeDetailPanel';
 import SearchBar from './components/SearchBar';
 import neuralData from './data/neural-data.json';
 import { mockNodes } from './data/mockNodes';
+
+// Debounce hook
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  
+  return debouncedValue;
+}
 
 // Use real neural data, fallback to mocks if needed
 const nodes = neuralData?.nodes?.length > 0 ? neuralData.nodes : mockNodes;
@@ -56,6 +70,9 @@ function App() {
   const [selectedNode, setSelectedNode] = useState<any>(null); // For highlighting
   const [detailNode, setDetailNode] = useState<any>(null); // For detail panel
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Debounce search to prevent crashes on every keystroke
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   // ESC key to deselect
   useEffect(() => {
@@ -161,11 +178,11 @@ function App() {
             <pointLight position={[100, 100, 100]} intensity={1} />
             
             {/* 3D Neural Graph with search */}
-            <NeuralGraph onNodeClick={handleNodeClick} searchQuery={searchQuery} selectedNode={selectedNode} onSelectNode={handleSelectNode} nodes={nodes} links={links} />
+            <NeuralGraph onNodeClick={handleNodeClick} searchQuery={debouncedSearchQuery} selectedNode={selectedNode} onSelectNode={handleSelectNode} nodes={nodes} links={links} />
 
             <OrbitControls 
               enableDamping 
-              autoRotate={!searchQuery} 
+              autoRotate={!debouncedSearchQuery} 
               autoRotateSpeed={0.15}
               enablePan={false}
               minDistance={200}
@@ -180,9 +197,9 @@ function App() {
           <div className="central-stats">
             <div className="mono-text stats-label">Neural Density</div>
             <div className="stats-value">
-              {searchQuery ? (
+              {debouncedSearchQuery ? (
                 <span style={{ color: '#00D9FF' }}>
-                  {nodes.filter((n: any) => n.title?.toUpperCase().includes(searchQuery.toUpperCase())).length}
+                  {nodes.filter((n: any) => n.title?.toUpperCase().includes(debouncedSearchQuery.toUpperCase())).length}
                 </span>
               ) : (
                 <>{nodes.length} <span className="stats-unit">NODES</span></>

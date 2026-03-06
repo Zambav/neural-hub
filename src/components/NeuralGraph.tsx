@@ -66,12 +66,13 @@ function DynamicLine({ sourceId, targetId, nodePositions, selectedNode }: {
   );
 }
 
-function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nodes: propNodes, links: propLinks }: NeuralGraphProps) {
+function NeuralGraph({ onNodeClick, searchQuery = '', selectedNode, onSelectNode, nodes: propNodes, links: propLinks }: NeuralGraphProps) {
   // Use prop nodes or fallback to mockNodes
   const allNodes = propNodes || mockNodes;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _allLinks = propLinks || []; // Reserved for future real link rendering
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [proximityNode, setProximityNode] = useState<any | null>(null);
   const groupRef = useRef<THREE.Group>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _linesRef = useRef<THREE.Group>(null); // Reserved for line group ref
@@ -120,33 +121,39 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
     setHoveredNode(null);
     document.body.style.cursor = 'crosshair';
     
-    // Hide tooltip only if no node is selected (keep showing selected node info)
+    // Hide tooltip when not hovering any sphere (regardless of selection)
     const tooltip = document.getElementById('node-tooltip');
-    if (tooltip && !selectedNode) {
+    if (tooltip) {
       tooltip.classList.remove('visible');
     }
-  }, [selectedNode]);
+  }, []);
 
   // Tooltip follows mouse
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const tooltip = document.getElementById('node-tooltip');
-      if (tooltip && (hoveredNode || selectedNode)) {
+      // Show tooltip when hovering OR when proximity is active (but not both)
+      if (tooltip && (hoveredNode || proximityNode)) {
         tooltip.style.left = (e.clientX + 20) + 'px';
         tooltip.style.top = (e.clientY - 20) + 'px';
       }
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [hoveredNode, selectedNode]);
+  }, [hoveredNode, proximityNode]);
 
   // Pre-compute filtered nodes to avoid recalculation in map
+  // Note: Search filtering is disabled for performance - only updating UI count
   const filteredNodes = useMemo(() => {
-    const nodes = searchQuery 
-      ? allNodes.filter((n: any) => !n.isCenter && n.title?.toUpperCase().includes(searchQuery.toUpperCase()))
-      : allNodes.filter((n: any) => !n.isCenter);
-    return nodes.slice(0, 600); // Show up to 600 nodes
-  }, [searchQuery, allNodes]);
+    try {
+      if (!allNodes || !Array.isArray(allNodes)) return [];
+      // Always show all non-center nodes (limited to 200 for performance)
+      return allNodes.filter((n: any) => n && !n.isCenter).slice(0, 200);
+    } catch (e) {
+      console.warn('Error filtering nodes:', e);
+      return [];
+    }
+  }, [allNodes]);
 
   // Assign colors to nodes for variety
   const nodeColorMap = useMemo(() => {
@@ -166,55 +173,68 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
     return map;
   }, [filteredNodes]);
 
-  // Generate node positions using proper Fibonacci sphere distribution
+  // Generate node positions - pure Fibonacci sphere for perfectly spherical distribution
   const nodePositions = useMemo(() => {
-    const pos = new Map<string, THREE.Vector3>();
-    // Find core by type === 'core' or isCenter flag
-    const centerNode = allNodes.find((n: any) => n.type === 'core' || n.isCenter);
-    
-    // Place core at absolute center (0,0,0)
-    if (centerNode) {
-      pos.set(centerNode.id, new THREE.Vector3(0, 0, 0));
-    }
+    try {
+      const pos = new Map<string, THREE.Vector3>();
+      
+      // Guard against empty nodes
+      if (!filteredNodes || filteredNodes.length === 0) return pos;
+      
+      // Find core by type === 'core' or isCenter flag
+      const centerNode = allNodes?.find((n: any) => n && (n.type === 'core' || n.isCenter));
+      
+      // Place core at absolute center (0,0,0)
+      if (centerNode) {
+        pos.set(centerNode.id, new THREE.Vector3(0, 0, 0));
+      }
 
-    // All non-core nodes distributed evenly on Fibonacci sphere
-    const nonCoreNodes = filteredNodes.filter((n: any) => n.type !== 'core' && !n.isCenter);
-    const sphereRadius = 350;
-    
-    nonCoreNodes.forEach((node: any, i: number) => {
-      // Fibonacci sphere distribution with MORE randomness
-      const phi = Math.acos(1 - 2 * (i + 0.5) / nonCoreNodes.length);
-      const theta = Math.PI * (1 + Math.sqrt(5)) * i + (Math.random() - 0.5) * 0.8; // Add angle jitter
+      // Get non-core nodes
+      const nonCoreNodes = filteredNodes.filter((n: any) => n && n.type !== 'core' && !n.isCenter);
+      const totalNodes = nonCoreNodes.length;
+      if (totalNodes === 0) return pos;
       
-      // Add MORE variation for depth - projects closer, others spread out
-      let depthFactor = 1;
-      if (node.type === 'project') depthFactor = 0.6 + Math.random() * 0.2; // Projects closer to core
-      else if (node.type === 'identity') depthFactor = 0.7 + Math.random() * 0.2;
-      else if (node.type === 'folder') depthFactor = 0.8 + Math.random() * 0.3;
-      else depthFactor = 0.7 + Math.random() * 0.5; // Files/memory scattered
+      const sphereRadius = 350;
       
-      const r = sphereRadius * depthFactor;
-      
-      const x = r * Math.sin(phi) * Math.cos(theta);
-      const y = r * Math.sin(phi) * Math.sin(theta);
-      const z = r * Math.cos(phi);
-      
-      pos.set(node.id, new THREE.Vector3(x, y, z));
-      
-      // Floating animation offset
-      const floatAmt = node.type === 'project' ? 12 : (node.type === 'identity' ? 8 : 5);
-      nodeOffsets.current.set(node.id, { 
-        offset: new THREE.Vector3(
-          (Math.random() - 0.5) * floatAmt,
-          (Math.random() - 0.5) * floatAmt,
-          (Math.random() - 0.5) * floatAmt
-        ), 
-        phase: Math.random() * Math.PI * 2 
+      // Pure Fibonacci sphere distribution - NO randomness for perfectly spherical shape
+      nonCoreNodes.forEach((node: any, i: number) => {
+        // Guard against invalid node
+        if (!node || typeof node.priority !== 'number') return;
+        
+        // Golden angle for even distribution
+        const phi = Math.acos(1 - 2 * (i + 0.5) / totalNodes);
+        const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+        
+        // All nodes at roughly same radius for spherical shell
+        // Slight variation based on priority only for visual depth
+        const baseRadius = sphereRadius * 0.75;
+        const priorityOffset = node.priority * 15; // Each priority level = 15 units
+        const r = baseRadius + priorityOffset;
+        
+        const x = r * Math.sin(phi) * Math.cos(theta);
+        const y = r * Math.sin(phi) * Math.sin(theta);
+        const z = r * Math.cos(phi);
+        
+        pos.set(node.id, new THREE.Vector3(x, y, z));
+        
+        // Minimal floating animation
+        const floatAmt = 3;
+        nodeOffsets.current.set(node.id, { 
+          offset: new THREE.Vector3(
+            (Math.random() - 0.5) * floatAmt,
+            (Math.random() - 0.5) * floatAmt,
+            (Math.random() - 0.5) * floatAmt
+          ), 
+          phase: Math.random() * Math.PI * 2 
+        });
       });
-    });
 
-    return pos;
-  }, [filteredNodes]);
+      return pos;
+    } catch (e) {
+      console.warn('Error generating node positions:', e);
+      return new Map();
+    }
+  }, [filteredNodes, allNodes]);
 
   // Generate connection lines - core ONLY connects to identity nodes
   const connections = useMemo(() => {
@@ -308,11 +328,17 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
   const _originalPositions = useRef<Map<string, THREE.Vector3>>(new Map());
   
   // Animate nodes with breathing effect only (no positional movement to keep lines connected)
-  useFrame(({ clock }) => {
+  // Also track camera proximity to large project nodes for dynamic tooltip
+  useFrame(({ clock, camera: cam }) => {
     if (!groupRef.current) return;
     
     const time = clock.getElapsedTime();
     const children = groupRef.current.children;
+    
+    // Track proximity to large project nodes (camera distance-based tooltip)
+    let closestProject: any = null;
+    let closestDistance = Infinity;
+    const proximityThreshold = 200; // Distance to show proximity tooltip
     
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
@@ -323,6 +349,25 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
       const breathe = Math.sin(time * node.priority * 0.5 + i * 0.5) * 0.04;
       const scale = 1 + breathe;
       child.scale.setScalar(scale);
+      
+      // Check proximity to large project nodes (for dynamic tooltip)
+      if (node.type === 'project' && node.priority >= 4) {
+        const nodePos = nodePositions.get(node.id);
+        if (nodePos) {
+          const dist = cam.position.distanceTo(nodePos);
+          if (dist < proximityThreshold && dist < closestDistance) {
+            closestDistance = dist;
+            closestProject = node;
+          }
+        }
+      }
+    }
+    
+    // Only update proximity if not hovering (hover takes priority)
+    if (!hoveredNode) {
+      setProximityNode(closestProject);
+    } else {
+      setProximityNode(null);
     }
   });
 
@@ -364,6 +409,33 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
     <group>
       {/* Connection Lines - Dynamic */}
       {ConnectionLines}
+      
+      {/* Proximity Tooltip - shows when camera is close to a large project */}
+      {proximityNode && !hoveredNode && (
+        <Html
+          position={nodePositions.get(proximityNode.id)?.toArray() || [0, 0, 0]}
+          center
+          distanceFactor={150}
+          style={{
+            pointerEvents: 'none',
+            transition: 'opacity 0.3s',
+          }}
+        >
+          <div style={{
+            background: 'rgba(0,20,35,0.85)',
+            color: '#00D9FF',
+            fontSize: '8px',
+            padding: '3px 6px',
+            borderRadius: '3px',
+            fontFamily: "'JetBrains Mono', monospace",
+            whiteSpace: 'nowrap',
+            border: '1px solid rgba(0,217,255,0.4)',
+            boxShadow: '0 0 10px rgba(0,217,255,0.3)',
+          }}>
+            {proximityNode.title?.substring(0, 18).toUpperCase()}
+          </div>
+        </Html>
+      )}
       
       {/* Nodes */}
       <group ref={groupRef}>
@@ -445,7 +517,7 @@ function NeuralGraph({ onNodeClick, searchQuery, selectedNode, onSelectNode, nod
                 onPointerOut={handlePointerOut}
                 scale={isHovered ? 1.3 : (isSelected ? 1.4 : 1)}
               >
-                <sphereGeometry args={[finalRadius, 24, 24]} />
+                <sphereGeometry args={[finalRadius, 48, 48]} />
                 <meshStandardMaterial
                   color={isCore ? '#FFFFEE' : (isHighlighted ? '#FFFFFF' : color)}
                   emissive={isCore ? '#FFD700' : (isHighlighted ? '#FFFFFF' : color)}

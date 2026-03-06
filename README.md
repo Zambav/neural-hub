@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# Neural Hub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interactive 3D visualization of OpenClaw's workspace - projects, files, memory logs, and system identity rendered as a spherical web in WebGL.
 
-Currently, two official plugins are available:
+## Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd projects/neural-hub
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Generate Data
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**Real data** (reads your workspace):
+```bash
+npx tsx src/data/generateNeuralData.ts
 ```
+
+**Mock data** (2030 fake nodes for testing):
+```bash
+npx tsx src/data/generateFakeData.ts
+```
+
+## Build for Production
+
+```bash
+npm run build
+# Output in dist/
+```
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── NeuralGraph.tsx    # Main 3D visualization
+│   ├── NodeDetailPanel.tsx # Right panel - node details
+│   ├── SearchBar.tsx      # Top search bar
+│   ├── SystemStatusHUD.tsx # Left panel - metrics
+│   └── InteractionLog.tsx # Right panel - activity log
+├── data/
+│   ├── generateNeuralData.ts  # Real data generator
+│   ├── generateFakeData.ts    # Fake data generator
+│   ├── mockNodes.ts           # Fallback mock data
+│   └── neural-data.json       # Generated real data
+└── types/
+    └── index.ts               # TypeScript interfaces
+```
+
+## Tech Stack
+
+- Vite + React + TypeScript
+- React Three Fiber (@react-three/fiber)
+- Drei (@react-three/drei)
+- @react-three/postprocessing (Bloom effects)
+
+## Features
+
+- Fibonacci sphere distribution
+- Core at center with pulsing glow
+- Node types: core, identity, project, folder, file, memory
+- Click to select, hover for tooltips
+- Search filtering
+- Connection lines between related nodes
+- Proximity-based labels when zoomed in
+
+## See Also
+
+- [BRIEF.md](./BRIEF.md) - Project overview and specs
+- [FUTURE.md](./FUTURE.md) - Feature roadmap
+- [CHANGELOG.md](./CHANGELOG.md) - Version history
+- [PROGRESS.md](./PROGRESS.md) - Current progress
